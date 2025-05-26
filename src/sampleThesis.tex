@@ -1,4 +1,4 @@
-\documentclass[phd,tocprelim]{cornell}
+\documentclass[master,tocprelim]{cornell}
 %
 % tocprelim option must be included to put the roman numeral pages in the
 % table of contents
@@ -31,36 +31,20 @@
 \renewcommand{\textfraction}{0.1}
 \renewcommand{\floatpagefraction}{0.75}
 
-\title {Your Title Goes Here}
-\author {John Doe}
-\conferraldate {August}{2007}
-\degreefield {Ph.D.}
-\copyrightholder{John Doe}
-\copyrightyear{2007}
+\title {OS Inspired Complete Kernel Fusion}
+\author {Osayamen Jonathan Aimuyo}
+\conferraldate {August}{2025}
+\degreefield {Master of Science}
+\copyrightholder{Osayamen Jonathan Aimuyo}
+\copyrightyear{2025}
 
 \begin{document}
 
 \maketitle
 \makecopyright
-
-\begin{abstract}
-Your abstract goes here. Make sure it sits inside the brackets. If not,
-your biosketch page may not be roman numeral iii, as required by the
-graduate school.
-\end{abstract}
-
-\begin{biosketch}
-Your biosketch goes here. Make sure it sits inside
-the brackets.
-\end{biosketch}
-
-\begin{dedication}
-This document is dedicated to all Cornell graduate students.
-\end{dedication}
-
-\begin{acknowledgements}
-Your acknowledgements go here. Make sure it sits inside the brackets.
-\end{acknowledgements}
+\input{content/abstract}
+\input{content/biosketch}
+\input{content/dedack}
 
 \contentspage
 \tablelistpage
