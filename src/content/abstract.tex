@@ -1,7 +1,31 @@
 %! Author = jonathan
 %! Date = 5/25/25
 \begin{abstract}
-    Your abstract goes here. Make sure it sits inside the brackets. If not,
-    your biosketch page may not be roman numeral iii, as required by the
-    graduate school.
+    Distributed Machine Learning (DML) is increasingly recognized as a communication-bound workload,
+    with most existing work aiming to alleviate this bottleneck through communication--computation overlap.
+    However, current approaches---largely reliant on CPU-managed operator scheduling and
+    synchronous communication collectives---leave significant performance on the table.
+
+    This thesis identifies, analyzes and addresses the inefficiencies arising from the
+    interplay between CPU-driven collective communication and highly parallel GPU computation.
+    We demonstrate that the standard bulk-synchronous communication model underutilizes GPU interconnect bandwidth
+    and is especially vulnerable to straggler-induced performance degradation.
+    Focusing on dynamic workloads such as Mixture-of-Experts (MoE), we highlight two critical bottlenecks.
+    First, we observe \emph{payload inefficiency} at the application layer,
+    where existing collective primitives force unnecessary padding of GPU network buffers.
+    Second, we expose how CPU-driven execution limits the exploitation of \emph{task locality}
+    and introduces artificial synchronization barriers across distributed GPU tasks.
+
+    To overcome these limitations, we propose a model of \emph{complete GPU residency},
+    where inter-GPU communication is integrated directly into GPU kernels.
+    We realize this vision in \sysname: a persistent,
+    in-kernel, actor-style operating system with packet switching
+    that enables complete operator fusion for Distributed MoE (DMoE) into a \emph{single kernel},
+    the first of its kind.
+    \sysname features a modular, message-driven architecture that supports
+    lockless execution across tens of thousands of GPU threads and across distributed GPUs as well.
+    We demonstrate how \sysname addresses the all-to-all communication bottleneck in expert parallelism
+    and enables high-throughput, GPU-initiated communication.
+    Evaluated against state-of-the-art distributed MoE frameworks, \sysname achieves up to \textbf{15$\times$} speedup,
+    establishing a new, scalable design methodology for distributed GPU systems.
 \end{abstract}

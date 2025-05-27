@@ -1,0 +1,29 @@
+%! Author = jonathan
+%! Date = 5/27/25
+\chapter{Conclusion}\label{ch:conclusion}
+This thesis introduces \sysname,
+the first system to fuse the entire Mixture-of-Experts (MoE)
+operator into a single, persistent GPU kernel.
+We show that prevailing MoE implementations
+suffer from two critical inefficiencies:
+(1) CPU-managed synchronous communication that leads to underutilized
+interconnects and (2) fragmented execution via multiple GPU kernels,
+introducing overhead and synchronization delays.
+
+In contrast, \sysname embraces a model of
+GPU autonomy by embedding computation, communication, and scheduling within a unified kernel.
+It leverages actor-style concurrency,
+warp specialization, and asynchronous (R)DMA to
+achieve fine-grained communication–computation overlap.
+
+Our evaluation demonstrates up to \textbf{15$\times$ speedup}
+over state-of-the-art systems, up to  \textbf{4$\times$} improved GPU utilization, and
+greater payload efficiency, especially in dynamic workloads like MoE.
+\sysname challenges the dominant execution paradigms in distributed deep learning
+and presents a compelling template for building future GPU-native systems.
+
+While several limitations remain---including programming complexity and lack of FP16 support---this
+work lays the groundwork for a new era of \emph{in-kernel distributed computation}.
+Future systems may build upon this foundation to enable kernel fusion for
+entire training pipelines, ushering in a design shift from CPU orchestration to
+\textbf{fully autonomous GPU execution}.

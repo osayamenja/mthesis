@@ -1,0 +1,35 @@
+%! Author = jonathan
+%! Date = 5/27/25
+\chapter{Limitations and Future Work}\label{ch:limitations-and-future-work}
+Despite the performance gains and architectural innovations of \sysname, there are several limitations
+worth acknowledging---both practical and conceptual---that open the door to future research.
+\begin{itemize}
+    \item \textbf{Programming complexity.} Developing fully fused, persistent kernels is a non-trivial engineering task.
+    While \sysname proves the feasibility and benefit of such kernels,
+    their construction demands deep expertise in GPU architectures,
+    synchronization and distributed protocols, and memory hierarchies.
+    This high barrier to entry limits adoption.
+    Future work may consider compiler-level abstractions or DSLs to democratize this technique.
+
+    \item \textbf{FP16 support and shared memory bank conflicts.}
+    \item Although modern GPUs natively support half-precision computation,
+    adapting \textsc{FlashDMoE} to FP16 is non-trivial due to shared memory bank conflicts.
+    These arise from the mismatch between bank granularity and half-precision
+    load-store alignment, leading to degraded memory throughput (\S\ref{ch:fp16-memory-throughput}).
+    Overcoming this will require careful rethinking of shared memory access patterns or
+    coalesced tile layouts specifically optimized for FP16.
+
+    \item \textbf{Rigid memory allocation.} The current memory allocation scheme used for the symmetric tensor layout
+    assumes a static token distribution across experts.
+    In reality, expert popularity is often skewed and dynamic.
+    Future extensions may explore elastic memory regions or
+    runtime-aware reallocation schemes that adapt based on observed routing patterns.
+
+    \item \textbf{Lack of backward pass and training support.} While this work focuses on inference,
+    enabling training requires fusing backward computation and gradient communication into the kernel.
+    Supporting this entails non-trivial changes to both memory bookkeeping and task descriptor definitions.
+    Nevertheless, it remains an exciting direction for extending this system to
+    fully support end-to-end training.
+\end{itemize}
+
+

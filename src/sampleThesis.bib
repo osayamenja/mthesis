@@ -1,6 +1,858 @@
+%! Author = jonathan
+%! Date = 5/26/25
+
 @book{aiw,
     title = "Alice's Adventures in Wonderland",
     author = "Lewis Carroll (Charles L. Dodgson)",
     publisher = "George MacDonald",
     year = 1865
+}
+
+@misc{cub,
+    author = {NVIDIA},
+    title = {\textit{CUB: cub::WarpScan, CUDA Core Compute Libraries (CCCL)}},
+    date = {April 24, 2025},
+    year = {2025},
+    url = {https://nvidia.github.io/cccl/cub/api/classcub_1_1WarpScan.html#}
+}
+
+@article{10.1145/7902.7903,
+    author = {Hillis, W. Daniel and Steele, Guy L.},
+    title = {Data parallel algorithms},
+    year = {1986},
+    issue_date = {Dec. 1986},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {29},
+    number = {12},
+    issn = {0001-0782},
+    url = {https://doi.org/10.1145/7902.7903},
+    doi = {10.1145/7902.7903},
+    journal = {Commun. ACM},
+    month = dec,
+    pages = {1170–1183},
+    numpages = {14}
+}
+
+@techreport{agha:85,
+    title={Actors: A Model Of Concurrent Computation In Distributed Systems},
+    author={Gul A. Agha},
+    year={1985},
+    note = {MIT Artificial Intelligence Laboratory Technical Reports},
+    publisher={Massachusetts Institute of Technology}
+}
+@inproceedings{10.5555/1624775.1624804,
+    author = {Hewitt, Carl and Bishop, Peter and Steiger, Richard},
+    title = {A universal modular ACTOR formalism for artificial intelligence},
+    year = {1973},
+    publisher = {Morgan Kaufmann Publishers Inc.},
+    address = {San Francisco, CA, USA},
+    pages = {235–245},
+    numpages = {11},
+    location = {Stanford, USA},
+    series = {IJCAI'73}
+}
+@phdthesis{Greif:75,
+    author = {Greif, Irene},
+    title = {SEMANTICS OF COMMUNICATING PARALLEL PROCESSES},
+    year = {1975},
+    school = {Massachusetts Institute of Technology}
+}
+@misc{nccl,
+    title={{NVIDIA Collective Communications Library (NCCL)}},
+    howpublished="\url{https://developer.nvidia.com/nccl}",
+    journal={NVIDIA Corp.}
+}
+@inproceedings{NEURIPS2022_67d57c32,
+    author = {Dao, Tri and Fu, Dan and Ermon, Stefano and Rudra, Atri and R\'{e}, Christopher},
+    booktitle = {Advances in Neural Information Processing Systems},
+    pages = {16344--16359},
+    publisher = {Curran Associates, Inc.},
+    title = {FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness},
+    url = {https://proceedings.neurips.cc/paper_files/paper/
+    2022/file/67d57c32e20fd0a7a302cb81d36e40d5-Paper-Conference.pdf},
+    volume = {35},
+    year = {2022}
+}
+
+@inproceedings{comet,
+    author = {Shulai Zhang and Ningxin Zheng and Haibin Lin and Ziheng Jiang and Wenlei Bao and
+    Chengquan Jiang and Qi Hou and Weihao Cui and Size Zheng and Li-Wen Chang and Quan Chen and Xin Liu},
+    booktitle = {MLSys '25},
+    title = {Comet: Fine-grained Computation-communication Overlapping for Mixture-of-Experts},
+    url = {https://arxiv.org/abs/2502.19811}
+}
+
+@misc{pingpong,
+    title={Deep Dive on CUTLASS Ping-Pong GEMM Kernel},
+    author={Less Wright and Adnan Hoque},
+    year={2024},
+    note = {PyTorch},
+    url={https://pytorch.org/blog/cutlass-ping-pong-gemm-kernel/}
+}
+
+@misc{cudx,
+    title={cuBLASDx},
+    author={NVIDIA},
+    year={2025},
+    url={https://docs.nvidia.com/cuda/cublasdx/}
+}
+
+@misc{nvshm,
+    title={NVIDIA OpenSHMEM Library (NVSHMEM)},
+    author={NVIDIA},
+    year={2025},
+    note = {v3.2.5},
+    url={https://docs.nvidia.com/nvshmem/api/index.html}
+}
+
+@misc{megatron,
+    title={Megatron-LM},
+    author={NVIDIA},
+    year={2025},
+    note = {v0.11.0},
+    url={https://github.com/NVIDIA/Megatron-LM?tab=readme-ov-file}
+}
+
+@inproceedings{megatron-lm,
+    title={Efficient large-scale language model training on gpu clusters using megatron-lm},
+    author={Narayanan, Deepak and Shoeybi, Mohammad and Casper, Jared and LeGresley, Patrick and Patwary, Mostofa and Korthikanti, Vijay and Vainbrand, Dmitri and Kashinkunti, Prethvi and Bernauer, Julie and Catanzaro, Bryan and others},
+    booktitle={Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis},
+    pages={1--15},
+    year={2021}
+}
+
+@inproceedings{raben,
+    author        = "Rabenseifner, Rolf",
+    editor        = "Bubak, Marian and van Albada, Geert Dick and Sloot, Peter M. A. and Dongarra, Jack",
+    title         = "Optimization of Collective Reduction Operations",
+    booktitle     = "Computational Science - ICCS 2004",
+    year          = "2004",
+    publisher     = "Springer Berlin Heidelberg",
+    address       = "Berlin, Heidelberg",
+    pages         = "1--9",
+    isbn          = "978-3-540-24685-5",
+    url           = {https://link.springer.com/content/pdf/10.1007/978-3-540-24685-5\_1.pdf}
+}
+
+@inproceedings{10.1145/3458817.3476209,
+    author = {Narayanan, Deepak and Shoeybi, Mohammad and Casper, Jared and LeGresley, Patrick and Patwary, Mostofa and Korthikanti, Vijay and Vainbrand, Dmitri and Kashinkunti, Prethvi and Bernauer, Julie and Catanzaro, Bryan and Phanishayee, Amar and Zaharia, Matei},
+    title = {Efficient large-scale language model training on GPU clusters using megatron-LM},
+    year = {2021},
+    isbn = {9781450384421},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3458817.3476209},
+    doi = {10.1145/3458817.3476209},
+    booktitle = {Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis},
+    articleno = {58},
+    numpages = {15},
+    location = {St. Louis, Missouri},
+    series = {SC '21}
+}
+
+@misc{deepep,
+    title={DeepSeek-V3 Technical Report},
+    author={DeepSeek-AI},
+    year={2025},
+    eprint={2412.19437},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    url={https://arxiv.org/abs/2412.19437},
+}
+
+@misc{llama4,
+    title={The Llama 4 herd: The beginning of a new era of natively multimodal AI innovation},
+    author={Meta AI},
+    year={2025},
+    url={https://ai.meta.com/blog/llama-4-multimodal-intelligence/},
+}
+
+@misc{dbrx,
+    title={Introducing DBRX: A New State-of-the-Art Open LLM},
+    author={Mosaic Research},
+    year={2024},
+    url={https://www.databricks.com/blog/introducing-dbrx-new-state-art-open-llm},
+}
+
+@misc{arctic,
+    title={Snowflake Arctic: The Best LLM for Enterprise AI — Efficiently Intelligent, Truly Open},
+    author={Snowflake AI Research},
+    year={2024},
+    url={https://www.snowflake.com/en/blog/arctic-open-efficient-foundation-language-models-snowflake/},
+}
+
+@misc{ptx,
+    title={PTX ISA: Version 8.7},
+    author={NVIDIA},
+    year={2025},
+    url={https://docs.nvidia.com/cuda/pdf/ptx_isa_8.7.pdf},
+}
+
+@software{Thakkar_CUTLASS_2023,
+    author = {Thakkar, Vijay and Ramani, Pradeep and Cecka, Cris and Shivam, Aniket and Lu, Honghao and Yan,
+    Ethan and Kosaian, Jack and Hoemmen, Mark and Wu, Haicheng and Kerr, Andrew and Nicely, Matt and Merrill, Duane
+    and Blasig, Dustyn and Qiao, Fengqi and Majcher, Piotr and Springer, Paul and Hohnerbach, Markus and Wang, Jin
+    and Gupta, Manish},
+    license = {BSD-3-Clause},
+    month = April,
+    title = {{CUTLASS}},
+    url = {https://github.com/NVIDIA/cutlass},
+    version = {3.9.0},
+    year = {2025}
+}
+
+@InProceedings{pmlr-v162-rajbhandari22a,
+    title = 	 {{D}eep{S}peed-{M}o{E}: Advancing Mixture-of-Experts Inference and Training to Power Next-Generation {AI} Scale},
+    author =       {Rajbhandari, Samyam and Li, Conglong and Yao, Zhewei and Zhang, Minjia and Aminabadi, Reza Yazdani
+    and Awan, Ammar Ahmad and Rasley, Jeff and He, Yuxiong},
+    booktitle = 	 {Proceedings of the 39th International Conference on Machine Learning},
+    pages = 	 {18332--18346},
+    year = 	 {2022},
+    volume = 	 {162},
+    series = 	 {Proceedings of Machine Learning Research},
+    month = 	 {17--23 Jul},
+    publisher =    {PMLR},
+    pdf = 	 {https://proceedings.mlr.press/v162/rajbhandari22a/rajbhandari22a.pdf},
+    url = 	 {https://proceedings.mlr.press/v162/rajbhandari22a.html},
+}
+
+@inproceedings{MLSYS2023_5616d34c,
+    author = {Hwang, Changho and Cui, Wei and Xiong, Yifan and Yang, Ziyue and Liu, Ze and Hu, Han and Wang, Zilong and Salas, Rafael and Jose, Jithin and Ram, Prabhat and Chau, HoYuen and Cheng, Peng and Yang, Fan and Yang, Mao and Xiong, Yongqiang},
+    booktitle = {Proceedings of Machine Learning and Systems},
+    editor = {D. Song and M. Carbin and T. Chen},
+    pages = {269--287},
+    publisher = {Curan},
+    title = {Tutel: Adaptive Mixture-of-Experts at Scale},
+    url = {https://proceedings.mlsys.org/paper_files/paper/2023/file/5616d34cf8ff73942cfd5aa922842556-Paper-mlsys2023.pdf},
+    volume = {5},
+    year = {2023}
+}
+
+@inproceedings{10.1145/3577193.3593704,
+    author = {Singh, Siddharth and Ruwase, Olatunji and Awan, Ammar Ahmad and Rajbhandari, Samyam and He, Yuxiong and Bhatele, Abhinav},
+    title = {A Hybrid Tensor-Expert-Data Parallelism Approach to Optimize Mixture-of-Experts Training},
+    year = {2023},
+    isbn = {9798400700569},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3577193.3593704},
+    doi = {10.1145/3577193.3593704},
+    abstract = {Mixture-of-Experts (MoE) is a neural network architecture that adds sparsely activated expert blocks to a base model, increasing the number of parameters without impacting computational costs. However, current distributed deep learning frameworks are limited in their ability to train high-quality MoE models with large base models. In this work, we present DeepSpeed-TED, a novel, three-dimensional, hybrid parallel algorithm that combines data, tensor, and expert parallelism to enable the training of MoE models with 4--8\texttimes{} larger base models than the current state-of-the-art. We also describe memory optimizations in the optimizer step, and communication optimizations that eliminate unnecessary data movement. We implement our approach in DeepSpeed and achieve speedups of 26\% over a baseline (i.e. without our communication optimizations) when training a 40 billion parameter MoE model (6.7 billion base model with 16 experts) on 128 V100 GPUs.},
+    booktitle = {Proceedings of the 37th ACM International Conference on Supercomputing},
+    pages = {203–214},
+    numpages = {12},
+    keywords = {parallel deep learning, mixture-of-experts, tensor parallelism, expert parallelism},
+    location = {Orlando, FL, USA},
+    series = {ICS '23}
+}
+
+@inproceedings{MLSYS2024_339caf45,
+    author = {Jiang, Chenyu and Tian, Ye and Jia, Zhen and Zheng, Shuai and Wu, Chuan and Wang, Yida},
+    booktitle = {Proceedings of Machine Learning and Systems},
+    editor = {P. Gibbons and G. Pekhimenko and C. De Sa},
+    pages = {74--86},
+    title = {Lancet: Accelerating Mixture-of-Experts Training via Whole Graph Computation-Communication Overlapping},
+    url = {https://proceedings.mlsys.org/paper_files/paper/2024/file/339caf45a6fa281cae8adc6465343464-Paper-Conference.pdf},
+    volume = {6},
+    year = {2024}
+}
+
+@inproceedings{10.1145/3503221.3508418,
+    author = {He, Jiaao and Zhai, Jidong and Antunes, Tiago and Wang, Haojie and Luo, Fuwen and Shi, Shangfeng and Li, Qin},
+    title = {FasterMoE: modeling and optimizing training of large-scale dynamic pre-trained models},
+    year = {2022},
+    isbn = {9781450392044},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3503221.3508418},
+    doi = {10.1145/3503221.3508418},
+    booktitle = {Proceedings of the 27th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming},
+    pages = {120–134},
+    numpages = {15},
+    keywords = {distributed deep learning, parallelism, performance modeling},
+    location = {Seoul, Republic of Korea},
+    series = {PPoPP '22}
+}
+
+@article{10.1145/3588964,
+    author = {Nie, Xiaonan and Miao, Xupeng and Wang, Zilong and Yang, Zichao and Xue, Jilong and Ma, Lingxiao and Cao, Gang and Cui, Bin},
+    title = {FlexMoE: Scaling Large-scale Sparse Pre-trained Model Training via Dynamic Device Placement},
+    year = {2023},
+    issue_date = {May 2023},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {1},
+    number = {1},
+    url = {https://doi.org/10.1145/3588964},
+    doi = {10.1145/3588964},
+    abstract = {With the increasing data volume, there is a trend of using large-scale pre-trained models to store the knowledge into an enormous number of model parameters. The training of these models is composed of lots of dense algebras, requiring a huge amount of hardware resources. Recently, sparsely-gated Mixture-of-Experts (MoEs) are becoming more popular and have demonstrated impressive pretraining scalability in various downstream tasks. However, such a sparse conditional computation may not be effective as expected in practical systems due to the routing imbalance and fluctuation problems. Generally, MoEs are becoming a new data analytics paradigm in the data life cycle and suffering from unique challenges at scales, complexities, and granularities never before possible.In this paper, we propose a novel DNN training framework, FlexMoE, which systematically and transparently address the inefficiency caused by dynamic dataflow. We first present an empirical analysis on the problems and opportunities of training MoE models, which motivates us to overcome the routing imbalance and fluctuation problems by a dynamic expert management and device placement mechanism. Then we introduce a novel scheduling module over the existing DNN runtime to monitor the data flow, make the scheduling plans, and dynamically adjust the model-to-hardware mapping guided by the real-time data traffic. A simple but efficient heuristic algorithm is exploited to dynamically optimize the device placement during training. We have conducted experiments on both NLP models (e.g., BERT and GPT) and vision models (e.g., Swin). And results show FlexMoE can achieve superior performance compared with existing systems on real-world workloads --- FlexMoE outperforms DeepSpeed by 1.70x on average and up to 2.10x, and outperforms FasterMoE by 1.30x on average and up to 1.45x.},
+    journal = {Proc. ACM Manag. Data},
+    month = may,
+    articleno = {110},
+    numpages = {19},
+    keywords = {deep learning system, distributed computing, sparse model}
+}
+
+@inproceedings{10.1145/3627703.3650083,
+    author = {Shi, Shaohuai and Pan, Xinglin and Wang, Qiang and Liu, Chengjian and Ren, Xiaozhe and Hu, Zhongzhe and Yang, Yu and Li, Bo and Chu, Xiaowen},
+    title = {ScheMoE: An Extensible Mixture-of-Experts Distributed Training System with Tasks Scheduling},
+    year = {2024},
+    isbn = {9798400704376},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3627703.3650083},
+    doi = {10.1145/3627703.3650083},
+    abstract = {In recent years, large-scale models can be easily scaled to trillions of parameters with sparsely activated mixture-of-experts (MoE), which significantly improves the model quality while only requiring a sub-linear increase in computational costs. However, MoE layers require the input data to be dynamically routed to a particular GPU for computing during distributed training. The highly dynamic property of data routing and high communication costs in MoE make the training system low scaling efficiency on GPU clusters. In this work, we propose an extensible and efficient MoE training system, ScheMoE, which is equipped with several features. 1) ScheMoE provides a generic scheduling framework that allows the communication and computation tasks in training MoE models to be scheduled in an optimal way. 2) ScheMoE integrates our proposed novel all-to-all collective which better utilizes intra- and inter-connect bandwidths. 3) ScheMoE supports easy extensions of customized all-to-all collectives and data compression approaches while enjoying our scheduling algorithm. Extensive experiments are conducted on a 32-GPU cluster and the results show that ScheMoE outperforms existing state-of-the-art MoE systems, Tutel and Faster-MoE, by 9\%-30\%.},
+    booktitle = {Proceedings of the Nineteenth European Conference on Computer Systems},
+    pages = {236–249},
+    numpages = {14},
+    keywords = {Distributed Deep Learning, Large Language Model, Mixture-of-Experts, Scheduling},
+    location = {Athens, Greece},
+    series = {EuroSys '24}
+}
+
+@inproceedings{10.1145/3710848.3710868,
+    author = {Wang, Hulin and Xia, Yaqi and Yang, Donglin and Zhou, Xiaobo and Cheng, Dazhao},
+    title = {Harnessing Inter-GPU Shared Memory for Seamless MoE Communication-Computation Fusion},
+    year = {2025},
+    isbn = {9798400714436},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3710848.3710868},
+    doi = {10.1145/3710848.3710868},
+    abstract = {The Mixture of Experts (MoE) architecture enhances model quality by scaling up model parameters. However, its development is hindered in distributed training scenarios due to significant communication overhead and expert load imbalance. Existing methods, which only allow for coarse-grained overlapping of communication and computation, slightly alleviate communication costs but at the same time, they introduce a notable impairment of computational efficiency. Furthermore, current approaches to addressing load imbalance often compromise model quality.We introduce CCFuser, a novel framework designed for efficient training of MoE models. CCFuser replaces the costly All2All operations typical in MoE architectures with efficient inter-GPU shared memory access. This allows for the concurrent computation of local and remote data within a fused kernel, achieving substantially higher compute FLOPS for GEMM operations. Additionally, CCFuser addresses load imbalance with a resource-efficient expert reassignment strategy, which optimizes the use of computational resources in expert reassignment through equivalent graph transformations without sacrificing statistical accuracy. By integrating these optimizations, CCFuser significantly enhances GPU utilization efficiency. Experiments conducted on A100 servers show that CCFuser outperforms state-of-the-art methods FastMoE and FasterMoE by an average of 2.96x and 2.48x, respectively, achieving a maximum speedup of 4.34x.},
+    booktitle = {Proceedings of the 30th ACM SIGPLAN Annual Symposium on Principles and Practice of Parallel Programming},
+    pages = {170–182},
+    numpages = {13},
+    keywords = {GPU, Kernel Fusion, MoE},
+    location = {Las Vegas, NV, USA},
+    series = {PPoPP '25}
+}
+
+@inproceedings{10.1145/3577193.3593713,
+    author = {Ismayilov, Ismayil and Baydamirli, Javid and Sa\u{g}bili, Do\u{g}an and Wahib, Mohamed and Unat, Didem},
+    title = {Multi-GPU Communication Schemes for Iterative Solvers: When CPUs are Not in Charge},
+    year = {2023},
+    isbn = {9798400700569},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3577193.3593713},
+    doi = {10.1145/3577193.3593713},
+    abstract = {This paper proposes a fully autonomous execution model for multi-GPU applications that completely excludes the involvement of the CPU beyond the initial kernel launch. In a typical multi-GPU application, the host serves as the orchestrator of execution by directly launching kernels, issuing communication calls, and acting as a synchronizer for devices. We argue that this orchestration, or control flow path, causes undue overhead and can be delegated entirely to devices to improve performance in applications that require communication among peers. For the proposed CPU-free execution model, we leverage existing techniques such as persistent kernels, thread block specialization, device-side barriers, and device-initiated communication routines to write fully autonomous multi-GPU code and achieve significantly reduced communication overheads. We demonstrate our proposed model on two broadly used iterative solvers, 2D/3D Jacobi stencil and Conjugate Gradient(CG). Compared to the CPU-controlled baselines, the CPU-free model can improve 3D stencil communication latency by 58.8\% and provide a 1.63x speedup for CG on 8 NVIDIA A100 GPUs. The project code is available at https://github.com/ParCoreLab/CPU-Free-model.},
+    booktitle = {Proceedings of the 37th ACM International Conference on Supercomputing},
+    pages = {192–202},
+    numpages = {11},
+    keywords = {NVSHMEM, iterative solvers, persistent kernels, GPU-initiated communication, multi-GPU},
+    location = {Orlando, FL, USA},
+    series = {ICS '23}
+}
+
+@inproceedings{10.1145/3603269.3604869,
+    author = {Liu, Juncai and Wang, Jessie Hui and Jiang, Yimin},
+    title = {Janus: A Unified Distributed Training Framework for Sparse Mixture-of-Experts Models},
+    year = {2023},
+    isbn = {9798400702365},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/3603269.3604869},
+    doi = {10.1145/3603269.3604869},
+    abstract = {Scaling models to large sizes to improve performance has led a trend in deep learning, and sparsely activated Mixture-of-Expert (MoE) is a promising architecture to scale models. However, training MoE models in existing systems is expensive, mainly due to the All-to-All communication between layers.All-to-All communication originates from expert-centric paradigm: keeping experts in-place and exchanging intermediate data to feed experts. We propose the novel data-centric paradigm: keeping data in-place and moving experts between GPUs. Since experts' size can be smaller than the size of data, data-centric paradigm can reduce communication workload. Based on this insight, we develop Janus. First, Janus supports fine-grained asynchronous communication, which can overlap computation and communication. Janus implements a hierarchical communication to further reduce cross-node traffic by sharing the fetched experts in the same machine. Second, when scheduling the "fetching expert" requests, Janus implements a topology-aware priority strategy to utilize intra-node and inter-node links efficiently. Finally, Janus allows experts to be prefetched, which allows the downstream computation to start immediately once the previous step completes.Evaluated on a 32-A100 cluster, Janus can reduce the traffic up to 16\texttimes{} and achieves up to 2.06\texttimes{} speedup compared with current MoE training system.},
+    booktitle = {Proceedings of the ACM SIGCOMM 2023 Conference},
+    pages = {486–498},
+    numpages = {13},
+    keywords = {distributed training, mixture of experts, deep learning},
+    location = {New York, NY, USA},
+    series = {ACM SIGCOMM '23}
+}
+
+@INPROCEEDINGS {10579250,
+    author = { Luo, Weile and Fan, Ruibo and Li, Zeyu and Du, Dayou and Wang, Qiang and Chu, Xiaowen },
+    booktitle = { 2024 IEEE International Parallel and Distributed Processing Symposium (IPDPS) },
+    title = {{ Benchmarking and Dissecting the Nvidia Hopper GPU Architecture }},
+    year = {2024},
+    volume = {},
+    ISSN = {},
+    pages = {656-667},
+    abstract = { Graphics processing units (GPUs) are continually evolving to cater to the computational demands of contemporary general-purpose workloads, particularly those driven by artificial intelligence (AI) utilizing deep learning techniques. A substantial body of studies have been dedicated to dissecting the microarchitectural metrics characterizing diverse GPU generations, which helps researchers understand the hardware details and leverage them to optimize the GPU programs. However, the latest Hopper GPUs present a set of novel attributes, including new tensor cores supporting FP8, DPX, and distributed shared memory. Their details still remain mysterious in terms of performance and operational characteristics. In this research, we propose an extensive benchmarking study focused on the Hopper GPU. The objective is to unveil its microarchitectural intricacies through an examination of the new instruction-set architecture (ISA) of Nvidia GPUs and the utilization of new CUDA APIs. Our approach involves two main aspects. Firstly, we conduct conventional latency and throughput comparison benchmarks across the three most recent GPU architectures, namely Hopper, Ada, and Ampere. Secondly, we delve into a comprehensive discussion and benchmarking of the latest Hopper features, encompassing the Hopper DPX dynamic programming (DP) instruction set, distributed shared memory, and the availability of FP8 tensor cores. The microbenchmarking results we present offer a deeper understanding of the novel GPU AI function units and programming features introduced by the Hopper architecture. This newfound understanding is expected to greatly facilitate software optimization and modeling efforts for GPU architectures. To the best of our knowledge, this study makes the first attempt to demystify the tensor core performance and programming instruction sets unique to Hopper GPUs. },
+    keywords = {Performance evaluation;Tensors;Microarchitecture;Instruction sets;Graphics processing units;Computer architecture;Benchmark testing},
+    doi = {10.1109/IPDPS57955.2024.00064},
+    url = {https://doi.ieeecomputersociety.org/10.1109/IPDPS57955.2024.00064},
+    publisher = {IEEE Computer Society},
+    address = {Los Alamitos, CA, USA},
+    month =May}
+
+@misc{amperearch,
+    title={Demystifying the Nvidia Ampere Architecture through Microbenchmarking and Instruction-level Analysis},
+    author={Hamdy Abdelkhalik and Yehia Arafa and Nandakishore Santhi and Abdel-Hameed Badawy},
+    year={2022},
+    eprint={2208.11174},
+    archivePrefix={arXiv},
+    primaryClass={cs.AR},
+    url={https://arxiv.org/abs/2208.11174},
+}
+
+@inproceedings{NIPS2017_3f5ee243,
+    author = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, \L ukasz and Polosukhin, Illia},
+    booktitle = {Advances in Neural Information Processing Systems},
+    pages = {},
+    publisher = {Curran Associates, Inc.},
+    title = {Attention is All you Need},
+    url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf},
+    volume = {30},
+    year = {2017}
+}
+
+@inproceedings{DBLP:conf/iclr/LepikhinLXCFHKS21,
+    author       = {Dmitry Lepikhin and
+                  HyoukJoong Lee and
+                  Yuanzhong Xu and
+                  Dehao Chen and
+                  Orhan Firat and
+                  Yanping Huang and
+                  Maxim Krikun and
+                  Noam Shazeer and
+                  Zhifeng Chen},
+    title        = {GShard: Scaling Giant Models with Conditional Computation and Automatic
+                  Sharding},
+    booktitle    = {9th International Conference on Learning Representations, {ICLR} 2021,
+                  Virtual Event, Austria, May 3-7, 2021},
+    publisher    = {OpenReview.net},
+    year         = {2021},
+    url          = {https://openreview.net/forum?id=qrwe7XHTmYb},
+    timestamp    = {Wed, 23 Jun 2021 17:36:40 +0200},
+    biburl       = {https://dblp.org/rec/conf/iclr/LepikhinLXCFHKS21.bib},
+    bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@inproceedings{10.1145/1278177.1278183,
+    author = {Yelick, Katherine and Bonachea, Dan and Chen, Wei-Yu and Colella, Phillip and Datta, Kaushik and Duell, Jason and Graham, Susan L. and Hargrove, Paul and Hilfinger, Paul and Husbands, Parry and Iancu, Costin and Kamil, Amir and Nishtala, Rajesh and Su, Jimmy and Welcome, Michael and Wen, Tong},
+    title = {Productivity and performance using partitioned global address space languages},
+    year = {2007},
+    isbn = {9781595937414},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/1278177.1278183},
+    doi = {10.1145/1278177.1278183},
+    abstract = {Partitioned Global Address Space (PGAS) languages combine the programming convenience of shared memory with the locality and performance control of message passing. One such language, Unified Parallel C (UPC) is an extension of ISO C defined by a consortium that boasts multiple proprietary and open source compilers. Another PGAS language, Titanium, is a dialect of JavaTM designed for high performance scientific computation. In this paper we describe some of the highlights of two related projects, the Titanium project centered at U.C. Berkeley and the UPC project centered at Lawrence Berkeley National Laboratory. Both compilers use a source-to-source strategy that trans-lates the parallel languages to C with calls to a communication layer called GASNet. The result is portable high-performance compilers that run on a large variety of shared and distributed memory multiprocessors. Both projects combine compiler, runtime, and application efforts to demonstrate some of the performance and productivity advantages to these languages.},
+    booktitle = {Proceedings of the 2007 International Workshop on Parallel Symbolic Computation},
+    pages = {24–32},
+    numpages = {9},
+    keywords = {GASNet, NAS parallel benchmarks, PGAS, UPC, one-sided communication, partitioned global address space, titanium},
+    location = {London, Ontario, Canada},
+    series = {PASCO '07}
+}
+
+@inproceedings{coconet,
+    title={Breaking the computation and communication abstraction barrier in distributed machine learning workloads},
+    author={Jangda, Abhinav and Huang, Jun and Liu, Guodong and Sabet, Amir Hossein Nodehi and Maleki, Saeed and Miao, Youshan and Musuvathi, Madanlal and Mytkowicz, Todd and Saarikivi, Olli},
+    booktitle={Proceedings of the 27th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 22)},
+    pages={402--416},
+    year={2022}
+}
+
+@inproceedings{decomposition,
+    title={Overlap communication with dependent computation via decomposition in large deep learning models},
+    author={Wang, Shibo and Wei, Jinliang and Sabne, Amit and Davis, Andy and Ilbeyi, Berkin and Hechtman, Blake and Chen, Dehao and Murthy, Karthik Srinivasa and Maggioni, Marcello and Zhang, Qiao and others},
+    booktitle={Proceedings of the 28th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 22)},
+    pages={93--106},
+    year={2022}
+}
+
+@inproceedings{centauri,
+    title={Centauri: Enabling Efficient Scheduling for Communication-Computation Overlap in Large Model Training via Communication Partitioning},
+    author={Chen, Chang and Li, Xiuhong and Zhu, Qianchao and Duan, Jiangfei and Sun, Peng and Zhang, Xingcheng and Yang, Chao},
+    booktitle={Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 24)},
+    pages={178--191},
+    year={2024}
+}
+
+@inproceedings{t3,
+    title={T3: Transparent Tracking \& Triggering for Fine-grained Overlap of Compute \& Collectives},
+    author={Pati, Suchita and Aga, Shaizeen and Islam, Mahzabeen and Jayasena, Nuwan and Sinclair, Matthew D},
+    booktitle={Proceedings of the 29th ACM International Conference on Architectural Support for Programming Languages and Operating Systems (ASPLOS 24)},
+    pages={1146--1164},
+    year={2024}
+}
+
+@inproceedings{megascale,
+    title={$\{$MegaScale$\}$: Scaling large language model training to more than 10,000 $\{$GPUs$\}$},
+    author={Jiang, Ziheng and Lin, Haibin and Zhong, Yinmin and Huang, Qi and Chen, Yangrui and Zhang, Zhi and Peng, Yanghua and Li, Xiang and Xie, Cong and Nong, Shibiao and others},
+    booktitle={21st USENIX Symposium on Networked Systems Design and Implementation (NSDI 24)},
+    pages={745--760},
+    year={2024}
+}
+
+@inproceedings{co2,
+    title={{CO}2: Efficient Distributed Training with Full Communication-Computation Overlap},
+    author={Weigao Sun and Zhen Qin and Weixuan Sun and Shidi Li and Dong Li and Xuyang Shen and Yu Qiao and Yiran Zhong},
+    booktitle={The Twelfth International Conference on Learning Representations (ICLR 24)},
+    year={2024}
+}
+
+@inproceedings{syndicate,
+    title={Better Together: Jointly Optimizing $\{$ML$\}$ Collective Scheduling and Execution Planning using $\{$SYNDICATE$\}$},
+    author={Mahajan, Kshiteej and Chu, Ching-Hsiang and Sridharan, Srinivas and Akella, Aditya},
+    booktitle={20th USENIX Symposium on Networked Systems Design and Implementation (NSDI 23)},
+    pages={809--824},
+    year={2023}
+}
+
+@article{tutel,
+    title={Tutel: Adaptive mixture-of-experts at scale},
+    author={Hwang, Changho and Cui, Wei and Xiong, Yifan and Yang, Ziyue and Liu, Ze and Hu, Han and Wang, Zilong and Salas, Rafael and Jose, Jithin and Ram, Prabhat and others},
+    journal={Proceedings of Machine Learning and Systems (MLSys 23)},
+    volume={5},
+    pages={269--287},
+    year={2023}
+}
+
+@inproceedings{fastermoe,
+    title={Fastermoe: modeling and optimizing training of large-scale dynamic pre-trained models},
+    author={He, Jiaao and Zhai, Jidong and Antunes, Tiago and Wang, Haojie and Luo, Fuwen and Shi, Shangfeng and Li, Qin},
+    booktitle={Proceedings of the 27th ACM SIGPLAN Symposium on Principles and Practice of Parallel Programming (PPoPP 22)},
+    pages={120--134},
+    year={2022}
+}
+
+@inproceedings{lancet,
+    author = {Jiang, Chenyu and Tian, Ye and Jia, Zhen and Zheng, Shuai and Wu, Chuan and Wang, Yida},
+    title = {Lancet: Accelerating Mixture-of-Experts Training via Whole Graph Computation-Communication Overlapping},
+    booktitle = {Proceedings of Machine Learning and Systems (MLSys 24)},
+    pages = {74--86},
+    year = {2024}
+}
+
+@inproceedings{mgg,
+    title={$\{$MGG$\}$: Accelerating graph neural networks with $\{$Fine-Grained$\}$$\{$Intra-Kernel$\}$$\{$Communication-Computation$\}$ pipelining on $\{$Multi-GPU$\}$ platforms},
+    author={Wang, Yuke and Feng, Boyuan and Wang, Zheng and Geng, Tong and Barker, Kevin and Li, Ang and Ding, Yufei},
+    booktitle={17th USENIX Symposium on Operating Systems Design and Implementation (OSDI 23)},
+    pages={779--795},
+    year={2023}
+}
+
+@inproceedings{pipemare,
+    title = {PipeMare: Asynchronous Pipeline Parallel DNN Training},
+    author = {Yang, Bowen and Zhang, Jian and Li, Jonathan  and Re, Christopher and Aberger, Christopher and De Sa, Christopher},
+    booktitle = {Proceedings of Machine Learning and Systems (MLSys 21)},
+    pages = {269--296},
+    year = {2021}
+}
+
+@inproceedings{ashpipe,
+    title={AshPipe: Asynchronous Hybrid Pipeline Parallel for DNN Training},
+    author={Hosoki, Ryubu and Endo, Toshio and Hirofuchi, Takahiro and Ikegami, Tsutomu},
+    booktitle={Proceedings of the International Conference on High Performance Computing in Asia-Pacific Region},
+    pages={117--126},
+    year={2024}
+}
+
+@inproceedings{p2,
+    title={Synthesizing optimal parallelism placement and reduction strategies on hierarchical systems for deep learning},
+    author={Xie, Ningning and Norman, Tamara and Grewe, Dominik and Vytiniotis, Dimitrios},
+    booktitle={Proceedings of Machine Learning and Systems (MLSys 22)},
+    pages={548--566},
+    year={2022}
+}
+
+@inproceedings{schemoe,
+    title={ScheMoE: An Extensible Mixture-of-Experts Distributed Training System with Tasks Scheduling},
+    author={Shi, Shaohuai and Pan, Xinglin and Wang, Qiang and Liu, Chengjian and Ren, Xiaozhe and Hu, Zhongzhe and Yang, Yu and Li, Bo and Chu, Xiaowen},
+    booktitle={Proceedings of the Nineteenth European Conference on Computer Systems (EuroSys 24)},
+    pages={236--249},
+    year={2024}
+}
+
+@misc{nsight-metrics,
+    author = {NVIDIA},
+    title = {{NVIDIA Nsight Systems Metrics}},
+    url = {https://docs.nvidia.com/nsight-systems/UserGuide/index.html?highlight=SM%2520active#available-metrics}
+}
+
+@article{makespan1,
+    author        = {Graham, R. L.},
+    title         = {Bounds on Multiprocessing Timing Anomalies},
+    journal       = {SIAM Journal on Applied Mathematics},
+    volume        = {17},
+    number        = {2},
+    pages         = {416--429},
+    year          = {1969},
+    doi           = {10.1137/0117039},
+    url           = {https://doi.org/10.1137/0117039},
+    eprint        = {https://doi.org/10.1137/0117039}
+}
+@article{makespan2,
+    author        = {Garey, M. R. and Graham, R. L.},
+    title         = {Bounds for Multiprocessor Scheduling with Resource Constraints},
+    journal       = {SIAM Journal on Computing},
+    volume        = {4},
+    number        = {2},
+    pages         = {187--200},
+    year          = {1975},
+    doi           = {10.1137/0204015},
+    url           = {https://doi.org/10.1137/0204015},
+    eprint        = {https://doi.org/10.1137/0204015}
+}
+
+@book{approx,
+    author        = {Williamson, David P. and Shmoys, David B.},
+    title         = {The Design of Approximation Algorithms},
+    year          = {2011},
+    isbn          = {0521195276},
+    publisher     = {Cambridge University Press},
+    address       = {USA},
+    edition       = {1st}
+}
+
+@book{approx2,
+    author        = {Vazirani, Vijay V.},
+    title         = {Approximation Algorithms},
+    year          = {2010},
+    isbn          = {3642084699},
+    publisher     = {Springer Publishing Company, Incorporated}
+}
+
+@inproceedings{NIPS2017_2e1b24a6,
+    author = {Bateni, Mohammadhossein and Behnezhad, Soheil and Derakhshan, Mahsa and Hajiaghayi, MohammadTaghi and Kiveris, Raimondas and Lattanzi, Silvio and Mirrokni, Vahab},
+    booktitle = {Advances in Neural Information Processing Systems},
+    editor = {I. Guyon and U. Von Luxburg and S. Bengio and H. Wallach and R. Fergus and S. Vishwanathan and R. Garnett},
+    pages = {},
+    publisher = {Curran Associates, Inc.},
+    title = {Affinity Clustering: Hierarchical Clustering at Scale},
+    url = {https://proceedings.neurips.cc/paper_files/paper/2017/file/2e1b24a664f5e9c18f407b2f9c73e821-Paper.pdf},
+    volume = {30},
+    year = {2017}
+}
+
+@misc{transformer-engine,
+    author = {NVIDIA},
+    title = {Transformer Engine},
+    url = {https://github.com/NVIDIA/TransformerEngine}
+}
+
+@misc{bmamba,
+    title = {BlackMamba: Mixture of Experts for State-Space Models},
+    author = {Quentin Anthony and Yury Tokpanov and Paolo Glorioso and Beren Millidge},
+    year = {2024},
+    eprint = {2402.01771},
+    archivePrefix = {arXiv},
+    primaryClass = {cs.CL},
+    url = {https://arxiv.org/abs/2402.01771},
+}
+
+@inproceedings{ccfuser,
+    title={Harnessing Inter-GPU Shared Memory for Seamless MoE Communication-Computation Fusion},
+    author={Wang, Hulin and Xia, Yaqi and Yang, Donglin and Zhou, Xiaobo and Cheng, Dazhao},
+    booktitle={Proceedings of the 30th ACM SIGPLAN Annual Symposium on Principles and Practice of Parallel Programming},
+    pages={170--182},
+    year={2025}
+}
+
+@inproceedings{fused,
+    title={Optimizing distributed ml communication with fused computation-collective operations},
+    author={Punniyamurthy, Kishore and Hamidouche, Khaled and Beckmann, Bradford M},
+    booktitle={SC24: International Conference for High Performance Computing, Networking, Storage and Analysis},
+    pages={1--17},
+    year={2024}
+}
+
+@inproceedings{lina,
+    title={Accelerating distributed $\{$MoE$\}$ training and inference with lina},
+    author={Li, Jiamin and Jiang, Yimin and Zhu, Yibo and Wang, Cong and Xu, Hong},
+    booktitle={2023 USENIX Annual Technical Conference (USENIX ATC 23)},
+    pages={945--959},
+    year={2023}
+}
+
+@inproceedings{antdt,
+    author={Xiao, Youshao and Ju, Lin and Zhou, Zhenglei and Li, Siyuan and Huan, Zhaoxin and Zhang, Dalong and Jiang, Rujie and Wang, Lin and Zhang, Xiaolu and Liang, Lei and Zhou, Jun},
+    booktitle={2024 IEEE 40th International Conference on Data Engineering (ICDE 24)},
+    title={{AntDT: A Self-Adaptive Distributed Training Framework for Leader and Straggler Nodes}},
+    year={2024},
+    pages={5238-5251},
+}
+
+@article{malleus,
+    title={Malleus: Straggler-Resilient Hybrid Parallel Training of Large-scale Models via Malleable Data and Model Parallelization},
+    author={Li, Haoyang and Fu, Fangcheng and Ge, Hao and Lin, Sheng and Wang, Xuanyu and Niu, Jiawen and Wang, Yujie and Zhang, Hailin and Nie, Xiaonan and Cui, Bin},
+    journal={arXiv preprint arXiv:2410.13333},
+    year={2024}
+}
+
+@inproceedings{optireduce,
+    title={$\{$OptiReduce$\}$: Resilient and $\{$Tail-Optimal$\}$$\{$AllReduce$\}$ for Distributed Deep Learning in the Cloud},
+    author={Warraich, Ertza and Shabtai, Omer and Manaa, Khalid and Vargaftik, Shay and Piasetzky, Yonatan and Kadosh, Matty and Suresh, Lalith and Shahbaz, Muhammad},
+    booktitle={22nd USENIX Symposium on Networked Systems Design and Implementation (NSDI 25)},
+    pages={685--703},
+    year={2025}
+}
+
+@inproceedings{sms,
+    title={Proactive, Accuracy-aware Straggler Mitigation in Machine Learning Clusters},
+    author={Tairin, Suraiya and Shen, Haiying and Iyer, Anand},
+    booktitle={2024 IEEE International Parallel and Distributed Processing Symposium Workshops (IPDPSW)},
+    pages={1196--1198},
+    year={2024}
+}
+
+
+@misc{cuda_graphs_nvidia_blog,
+    author = {Michael Wendt and Joshua Wyatt},
+    title = {Getting Started with {CUDA} Graphs},
+    year = {2019},
+    howpublished = {\url{https://developer.nvidia.com/blog/cuda-graphs/}},
+    note = {Accessed: 2024-05-15}
+}
+
+@misc{triton-dist,
+    title={Triton-distributed: Programming Overlapping Kernels on Distributed AI Systems with the Triton Compiler},
+    author={Size Zheng and Wenlei Bao and Qi Hou and Xuegui Zheng and Jin Fang and Chenhui Huang and Tianqi Li and Haojie Duanmu and Renze Chen and Ruifan Xu and Yifan Guo and Ningxin Zheng and Ziheng Jiang and Xinyi Di and Dongyang Wang and Jianxi Ye and Haibin Lin and Li-Wen Chang and Liqiang Lu and Yun Liang and Jidong Zhai and Xin Liu},
+    year={2025},
+    eprint={2504.19442},
+    archivePrefix={arXiv},
+    primaryClass={cs.DC},
+    url={https://arxiv.org/abs/2504.19442},
+}
+
+@misc{ofiwgFi_cxi7,
+    author = {OpenFabrics Interfaces Working Group},
+    title = {fi\_cxi},
+    howpublished = {\url{https://ofiwg.github.io/libfabric/v1.21.0/man/fi_cxi.7.html}},
+    year = {2025},
+    note = {[Accessed 23-05-2025]},
+}
+
+@misc{nerscNetworkNERSC,
+    author = {NERSC},
+    title = {{N}etwork - {N}{E}{R}{S}{C} {D}ocumentation},
+    howpublished = {\url{https://docs.nersc.gov/performance/network/}},
+    year = {2025},
+    note = {[Accessed 23-05-2025]},
+}
+
+@misc{jiang2024mixtralexperts,
+    title={Mixtral of Experts},
+    author={Albert Q. Jiang and Alexandre Sablayrolles and Antoine Roux and Arthur Mensch and Blanche Savary and Chris Bamford and Devendra Singh Chaplot and Diego de las Casas and Emma Bou Hanna and Florian Bressand and Gianna Lengyel and Guillaume Bour and Guillaume Lample and Lélio Renard Lavaud and Lucile Saulnier and Marie-Anne Lachaux and Pierre Stock and Sandeep Subramanian and Sophia Yang and Szymon Antoniak and Teven Le Scao and Théophile Gervet and Thibaut Lavril and Thomas Wang and Timothée Lacroix and William El Sayed},
+    year={2024},
+    eprint={2401.04088},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG},
+    url={https://arxiv.org/abs/2401.04088},
+}
+
+@inproceedings{DBLP:conf/iclr/ShazeerMMDLHD17,
+    author       = {Noam Shazeer and
+                  Azalia Mirhoseini and
+                  Krzysztof Maziarz and
+                  Andy Davis and
+                  Quoc V. Le and
+                  Geoffrey E. Hinton and
+                  Jeff Dean},
+    title        = {Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts
+                  Layer},
+    booktitle    = {5th International Conference on Learning Representations, {ICLR} 2017,
+                  Toulon, France, April 24-26, 2017, Conference Track Proceedings},
+    publisher    = {OpenReview.net},
+    year         = {2017},
+    url          = {https://openreview.net/forum?id=B1ckMDqlg},
+    timestamp    = {Thu, 25 Jul 2019 14:25:44 +0200},
+    biburl       = {https://dblp.org/rec/conf/iclr/ShazeerMMDLHD17.bib},
+    bibsource    = {dblp computer science bibliography, https://dblp.org}
+}
+
+@misc{hendrycks2023gaussianerrorlinearunits,
+    title={Gaussian Error Linear Units (GELUs)},
+    author={Dan Hendrycks and Kevin Gimpel},
+    year={2023},
+    eprint={1606.08415},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG},
+    url={https://arxiv.org/abs/1606.08415},
+}
+
+@inproceedings{10.5555/3104322.3104425,
+    author = {Nair, Vinod and Hinton, Geoffrey E.},
+    title = {Rectified linear units improve restricted boltzmann machines},
+    year = {2010},
+    isbn = {9781605589077},
+    publisher = {Omnipress},
+    address = {Madison, WI, USA},
+    abstract = {Restricted Boltzmann machines were developed using binary stochastic hidden units. These can be generalized by replacing each binary unit by an infinite number of copies that all have the same weights but have progressively more negative biases. The learning and inference rules for these "Stepped Sigmoid Units" are unchanged. They can be approximated efficiently by noisy, rectified linear units. Compared with binary units, these units learn features that are better for object recognition on the NORB dataset and face verification on the Labeled Faces in the Wild dataset. Unlike binary units, rectified linear units preserve information about relative intensities as information travels through multiple layers of feature detectors.},
+    booktitle = {Proceedings of the 27th International Conference on International Conference on Machine Learning},
+    pages = {807–814},
+    numpages = {8},
+    location = {Haifa, Israel},
+    series = {ICML'10}
+}
+
+@inproceedings{NEURIPS2024_9f2b171f,
+    author = {Lu, Xin and Zhao, Yanyan and Qin, Bing and Huo, Liangyu and Yang, Qing and Xu, Dongliang},
+    booktitle = {Advances in Neural Information Processing Systems},
+    editor = {A. Globerson and L. Mackey and D. Belgrave and A. Fan and U. Paquet and J. Tomczak and C. Zhang},
+    pages = {87411--87437},
+    publisher = {Curran Associates, Inc.},
+    title = {How does Architecture Influence the Base Capabilities of Pre-trained Language Models? A Case Study Based on FFN-Wider and MoE Transformers},
+    url = {https://proceedings.neurips.cc/paper_files/paper/2024/file/9f2b171fd3f4ca8dd71d1998f65c356a-Paper-Conference.pdf},
+    volume = {37},
+    year = {2024}
+}
+
+@inproceedings{MLSYS2023_5a54f793,
+    author = {Gale, Trevor and Narayanan, Deepak and Young, Cliff and Zaharia, Matei},
+    booktitle = {Proceedings of Machine Learning and Systems},
+    editor = {D. Song and M. Carbin and T. Chen},
+    pages = {288--304},
+    publisher = {Curan},
+    title = {MegaBlocks: Efficient Sparse Training with Mixture-of-Experts},
+    url = {https://proceedings.mlsys.org/paper_files/paper/2023/file/5a54f79333768effe7e8927bcccffe40-Paper-mlsys2023.pdf},
+    volume = {5},
+    year = {2023}
+}
+
+@INPROCEEDINGS{1639320,
+    author={Bell, C. and Bonachea, D. and Nishtala, R. and Yelick, K.},
+    booktitle={Proceedings 20th IEEE International Parallel \& Distributed Processing Symposium},
+    title={Optimizing bandwidth limited problems using one-sided communication and overlap},
+    year={2006},
+    volume={},
+    number={},
+    pages={10 pp.-},
+    keywords={Bandwidth;Application software;Costs;Delay;Yarn;Laboratories;Computer science;Message passing;Scalability;Electronics packaging},
+    doi={10.1109/IPDPS.2006.1639320}
+}
+
+@inproceedings{10.1145/3545008.3545056,
+    author        = {Chen, Yuxin and Brock, Benjamin and Porumbescu, Serban and Buluc, Aydin and Yelick, Katherine and Owens, John},
+    title         = {Atos: A Task-Parallel GPU Scheduler for Graph Analytics},
+    year          = {2023},
+    isbn          = {9781450397339},
+    publisher     = {Association for Computing Machinery},
+    address       = {New York, NY, USA},
+    url           = {https://doi.org/10.1145/3545008.3545056},
+    doi           = {10.1145/3545008.3545056},
+    booktitle     = {Proceedings of the 51st International Conference on Parallel Processing},
+    articleno     = {50},
+    numpages      = {11},
+    keywords      = {task-parallel, speculation, irregular workloads, graph algorithms, asynchrony, GPU},
+    location      = {Bordeaux, France},
+    series        = {ICPP '22}
+}
+
+@article{10.1145/3725536.3725539,
+    author = {Aimuyo, Osayamen J},
+    title = {Aristos: Pipelining One-sided Communication in Distributed Mixture of Experts},
+    year = {2025},
+    issue_date = {March 2025},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    volume = {52},
+    number = {4},
+    issn = {0163-5999},
+    url = {https://doi.org/10.1145/3725536.3725539},
+    doi = {10.1145/3725536.3725539},
+    abstract = {We propose Aristos, a communication-optimal, distributed algorithm that uses asynchronous communication interleaved with computation to specifically tackle the communication overhead of Distributed Mixture-of-Experts (DMoE) transformer models. DMoE, as implemented today, entails frequent synchronous All-to-All communication operations that scale linearly per step with a model's number of layers. Thus, we first seek clarification on how All-to-All bottlenecks DMoE and whether the interconnector communication algorithm is at fault.We investigate more than 21k All-to-All CUDA kernels and empirically confirm that their runtimes exhibit a significant long-tail distribution in both multi-node and single-node settings, respectively. We argue that this phenomenon is a shortcoming of the global barrier necessitated by the synchronous implementation of All-to-All in state-of-the-art collective libraries. We use these empirical insights to motivate Aristos, which obviates the global barrier, instead favoring asynchronous communication that yields native support for pipelining. Aristos also exposes tunable hyperparameters that navigate the trade-off between faster performance and reduced token dropping.},
+    journal = {SIGMETRICS Perform. Eval. Rev.},
+    month = mar,
+    pages = {3–5},
+    numpages = {3}
 }
