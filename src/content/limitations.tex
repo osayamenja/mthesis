@@ -12,18 +12,13 @@ worth acknowledging---both practical and conceptual---that open the door to futu
     Future work may consider compiler-level abstractions or DSLs to democratize this technique.
 
     \item \textbf{FP16 support and shared memory bank conflicts.}
-    \item Although modern GPUs natively support half-precision computation,
-    adapting \textsc{FlashDMoE} to FP16 is non-trivial due to shared memory bank conflicts.
-    These arise from the mismatch between bank granularity and half-precision
-    load-store alignment, leading to degraded memory throughput (\S\ref{ch:fp16-memory-throughput}).
-    Overcoming this will require careful rethinking of shared memory access patterns or
-    coalesced tile layouts specifically optimized for FP16.
-
-    \item \textbf{Rigid memory allocation.} The current memory allocation scheme used for the symmetric tensor layout
-    assumes a static token distribution across experts.
-    In reality, expert popularity is often skewed and dynamic.
-    Future extensions may explore elastic memory regions or
-    runtime-aware reallocation schemes that adapt based on observed routing patterns.
+    Although modern GPUs natively support half-precision computation,
+    adapting \textsc{FlashDMoE} to FP16 is non-trivial for the Processor's computational operators.
+    Specifically, our manually tuned swizzle shared memory layouts are not the most efficient
+    template parameters for CUTLASS' Collective Mainloop operator which we use to implement our in-device GEMMs.
+    This suboptimal configuration degrades memory throughput as shown in \S\ref{ch:fp16-memory-throughput}.
+    Overcoming this for Ampere GPUs and below would require careful investigation of optimal layouts, but
+    for Hopper GPUs and above, we anticipate using the builder interface that CUTLASS provides in our future improvements.
 
     \item \textbf{Lack of backward pass and training support.} While this work focuses on inference,
     enabling training requires fusing backward computation and gradient communication into the kernel.
