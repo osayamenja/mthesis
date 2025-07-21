@@ -77,8 +77,9 @@ between the MoE and dense transformer models!
 \begin{equation}\label{eq:equivalence}
 \mathcal{F}_{MoE} = 4SHP = \mathcal{F}_{FFN}
 \end{equation}
-This relationship presents empirically as uniform latency independent of changes in $N_e$ ($8 \rightarrow 128$),
-as \sysname, and Megatron-\{CUTLASS, TE\} exhibit in Figure~\ref{fig:expert_trend}.
+This relationship presents empirically as uniform latency independent of changes in $N_e$
+as \sysname and Megatron-\{CUTLASS, TE\} exhibit in Figure~\ref{fig:expert_trend},
+where $N_e \in \{8, \cdots, 128\}$.
 \begin{figure}[!h]
     \centering
     \begin{subfigure}{0.485\textwidth}
@@ -264,4 +265,7 @@ For in-device BLAS, \sysname develops custom high-performance GEMM operations vi
 \subsection{Research Papers}\label{subsec:research-papers}
 This thesis comprises a first-author publication at ACM SIGMETRICS'24~\cite{10.1145/3725536.3725539}
 and another first-author submission in review at NeurIPS \('25\)~\cite{flasharxiv}.
+\subsection{Code Artifact}\label{subsec:code-artifact}
+We open source the code and steps to reproduce all results contained in this thesis at
+\url{https://github.com/osayamenja/Kleos/tree/main/csrc/include/kleos/moe}
 

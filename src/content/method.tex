@@ -143,34 +143,34 @@ and GPU occupancy to deliver optimal performance.
         $flags \gets \mathbf{GetSymmetricFlags}()$\;
         $tQ \gets \mathbf{GetTQ}()$\;
         \tcp{Predefined upper bound on the number of tasks.}
-        \tcp{Modulated to the actual task count computed}
-        \tcp{from dispatch signals received from peer GPUs}
+        \tcp{We modulate this value to the actual task count computed}
+        \tcp{dispatch signals received from peer GPUs}
         $taskBound \gets \mathbf{GetTaskBound}()$\;
         \While{$\mathbf{AtomicLoad}(interrupt) == $ \kwFalse}{
             \tcp{dispatch flags}
             \DoParallel{
-                Visit dispatch flags\;
-                Atomically retrieve signal\;
-                \If{Signal is set and flag is not visited}{
-                    Mark visited\;
+                $\text{Visit dispatch flags}$\;
+                $\text{Atomically retrieve signal}$\;
+                \If{$\text{Signal is set and flag is not visited}$}{
+                    $\text{Mark visited}$\;
                     $\mathbf{SelfCorrectTaskBound}(taskBound, Signal)$\;
-                    Enforce memory consistency before consuming packet\;
-                    Decode packet into a set of $GEMM_0$ task descriptors\;
-                    Write task descriptors to $tQ$\;
-                    Notify Scheduler of decoded tasks\;
+                    $\text{Enforce memory consistency before consuming packet}$\;
+                    $\text{Decode packet to } GEMM_0 \text{ task descriptors with input } X$\;
+                    $\text{Write task descriptors to } tQ$\;
+                    $\text{Notify Scheduler of decoded tasks}$\;
                 }
             }
-            Advance flags by number of dispatch flags length\;
-            Atomically retrieve signal\;
+            $\text{Advance flags by number of dispatch flags length}$\;
+            $\text{Atomically retrieve signal}$\;
             \tcp{combine signals}
             \DoParallel{
-                Visit combine flags: one per tile\;
-                \If{Signal is set and flag is not visited}{
-                    Mark visited\;
-                    Enforce memory consistency before consuming packet\;
-                    Decode packet into a set of $combine$ task descriptors\;
-                    Write task descriptors to $tQ$\;
-                    Notify Scheduler of decoded tasks\;
+                $\text{Visit combine flags: one per tile}$\;
+                \If{$\text{Signal is set and flag is not visited}$}{
+                    $\text{Mark visited}$\;
+                    $\text{Enforce memory consistency before consuming packet}$\;
+                    $\text{Decode packet to } combine \text{ task descriptors with inputs } T_{\phi}, G_{\phi}, O$\;
+                    $\text{Write task descriptors to } tQ$\;
+                    $\text{Notify Scheduler of decoded tasks}$\;
                 }
             }
         }
