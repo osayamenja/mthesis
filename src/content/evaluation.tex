@@ -19,100 +19,171 @@
         Binary size & 29 MB\\
     \end{tabular}
 \end{table}
-We implement (Table~\ref{tab:impl_metrics}) and evaluate \sysname by addressing two main questions:
-(1) Under what conditions does \sysname outperform state-of-the-art MoE systems,
-and why (\S\ref{subsec:scalability-with-tokens-and-experts} -~\ref{sec:payload-efficiency})? and (2) How much GPU memory does
-\sysname require for core data structures (\S\ref{sec:eval:memory})?
+We implement (\S\ref{tab:impl_metrics}) and evaluate \sysname and evaluate across
+five metrics: \textbf{Forward Latency} (\S~\ref{sec:forward-latency}),
+\textbf{GPU Utilization} (\S~\ref{sec:gpu-utilization}),
+\textbf{Overlap Efficiency} (\S~\ref{sec:overlap-efficiency}),
+\textbf{Throughput} (\S~\ref{sec:throughput}), and \textbf{Expert Scalability} (\S~\ref{sec:expert-scalability}).
 \section{Setup}\label{sec:setup}
-We run experiments on a RunPod server with 8 $\times$ NVIDIA H100 80G GPUs, 125 GB of RAM, and 20 vCPUs.
-We used PyTorch 2.6.0, CUDA 12.8, and Ubuntu 22.04.
+We run experiments on a server with 8 NVIDIA H100 80G GPUs interconnected via NVLink,
+125 GB of RAM, and 20 vCPUs. We used PyTorch 2.6.0, CUDA 12.8, and Ubuntu 22.04.
 All experiments use MoE transformer models configured with 16 attention heads,
-an embedding dimension of 1024, and an FFN hidden size of 4096.
+an embedding dimension of 2048, and an FFN intermediate size of 2048.
+We apply Distributed Data Parallelism (DDP) and Expert Parallelism for all experiments.
+We execute only the forward pass over a single MoE layer and measure the average runtime
+of 32 passes after 32 warmup passes.
 We use top-2 routing with a capacity factor of 1.0.
-Note all baselines were evaluated using FP16 precision, while \sysname was evaluated on FP32 precision,
-see \S\ref{ch:limitations-and-future-work} for more details.
 We compare \sysname against several state-of-the-art MoE systems:
 (1) \textbf{Comet}~\cite{comet},
 (2) \textbf{FasterMoE}~\cite{fastermoe},
-(3) \textbf{Megatron-LM}~\cite{megatron-lm}, and
-(4) \textbf{DeepEP}~\cite{deepep}.
-Comet and DeepEP rely on NVSHMEM for communication, while FasterMoE and Megatron-LM use NCCL.
+(3) \textbf{Megatron-CUTLASS}~\cite{megatron-lm}, and
+(4) \textbf{Megatron-TE}: Megatron-LM with Transformer Engine~\cite{transformer-engine}.
+Comet relies on~\verb|cudaMemcpyPeerAsync|~\cite{fluxp2p}, while FasterMoE and Megatron-LM use NCCL exclusively for communication.
 We also evaluate \sysname on a multi-node environment and discuss our findings in \S\ref{sec:multi-node-evaluation}.
-\section{Scalability with Tokens and Experts}\label{subsec:scalability-with-tokens-and-experts}
-\begin{figure}[h!]
+\subsection{Desiderata}\label{subsec:desiderata}
+In our experiments, we observe Comet exhibiting anomalously bad performance values at 8 GPUs,
+so we exclude their results from evaluations at 8 GPUs and only include for results at $\leq$
+4 GPUs.
+\textbf{Note} we evaluate \sysname using FP32 precision whereas all baselines use FP16.
+We do so because (1) no baseline supports FP32 and (2) time constraints prevent us from tuning our system
+to peak performance at FP16.
+Most importantly, this precision discrepancy disadvantages \sysname by doubling the
+communication and computation precision, \emph{making our results a conservative lower bound}.
+Yet, as we show in the succeeding sections, \sysname outperforms all baselines.
+\section{Forward Latency}\label{sec:forward-latency}
+\begin{figure}[!h]
     \centering
-    \subcaptionbox{Scaling with the number of tokens (E = 32).\label{fig:scalability-token}}{%
-        \includegraphics[width=\linewidth]{figures/scaling_tokens}
-    }
-    \subcaptionbox{Scaling with the number of experts (T = 8K)\label{fig:scalability-experts}}{%
-        \includegraphics[width=\linewidth]{figures/scaling_experts}
-    }
-    \caption{Scalability with respect to the number of tokens and experts. All experiments use 8 GPUs.}
-    \label{fig:scalability-token-experts}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_tokens}
+        \caption{4 H100s}
+        \label{sub:4gl}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_tokens_8}
+        \caption{8 H100s}
+        \label{sub:8gl}
+    \end{subfigure}
+    \caption{Forward Latency as the \emph{Number of Tokens} per GPU increases.}
+    \label{fig:fl}
 \end{figure}
-We first analyze the scalability of \sysname in two dimensions: the number of input tokens and the number of experts.
-Figure~\ref{fig:scalability-token-experts} shows execution time for a single MoE layer on 8 GPUs.
-\sysname outperforms baselines between \textbf{1.4X} to \textbf{9.5X} when scaling across sequence lengths and
-between \textbf{1.2X} to \textbf{15X} across number of experts.
-We provide raw performance numbers in \S\ref{sec:numerical-data}.
-
-When scaling number of tokens (Fig.~\ref{fig:scalability-token}),
-\sysname maintains near-constant execution time ($2.07-2.33$ ms).
-In contrast, baselines incur significant runtime increases.
-For example, Comet's runtime grows from 2.9 ms to 19 ms,
-FasterMoE from 3.85 ms to 12.37 ms, Megatron-LM from 2.59 ms to 10.32 ms,
-and DeepEP from 3.80 ms to 7.12 ms. \sysname avoids these overheads by overlapping computation and communication,
-achieving stable performance despite higher token counts.
-When scaling the number of experts (Figure~\ref{fig:scalability-experts}),
-\sysname's runtime increases proportionally from 1.12 ms to 8.20 ms,
-reflecting higher overhead from routing and processing additional experts.
-Comet and Megatron-LM exhibit relatively flat runtimes (around 19 ms and 10.4 ms, respectively)
-but at significantly higher latencies.
-FasterMoE (7.9–22.65 ms) and DeepEP (6.03–11.3 ms)
-show increasing runtimes due to overheads from inefficient communication or computation handling.
-\section{GPU Scalability}\label{sec:gpu-scalability}
+We first measure the forward latency of FlashDMoE across different sequence lengths on both 4 and 8 GPU setups
+(Figure~\ref{fig:fl}).
+FlashDMoE consistently outperforms all baselines,
+with especially notable improvements at longer sequence lengths.
+On 4 GPUs, it achieves up to \textbf{4.6}x speedup over Megatron-TE at 16K tokens,
+and \textbf{2.6}x over FasterMoE.
+The gains are even more pronounced at 8 GPUs
+where FlashDMoE maintains low latency, exhibiting up to \textbf{6.4}x speedup over baselines that
+degrade steeply due to increasing communication costs as token buffers increase proportionally.
+These results highlight FlashDMoE’s ability to scale token throughput without suffering from the communication
+penalties that plague other implementations.
+\section{GPU SM Utilization}\label{sec:gpu-utilization}
 \begin{figure}[!ht]
     \centering
-    \includegraphics[width=\textwidth, keepaspectratio]{figures/scaling_gpus}
-    \caption{Scalability with respect to the number of GPUs (E = 32, T = 8K).}
-    \label{fig:scalability-gpus}
+    \centering
+    \includegraphics[width=0.8\linewidth, keepaspectratio]{figures/sm_util}
+    \caption{Comparison of SM utilization, defined as the ratio of cycles in which SMs
+    have at least one warp in flight
+    to the total number of cycles~\cite{nsight-metrics}.
+    Values represent the average SM utilization over 100 iterations.
+    All experiments use T = 8K and E = 64 on two A100s}
+    \label{fig:smu}
 \end{figure}
-Figure~\ref{fig:scalability-gpus} keeps tokens per GPU constant while scaling GPU count.
-\sysname shows strong scalability, achieving a speedup from 5.99 ms (2 GPUs) to 1.98 ms (4 GPUs)
-and maintaining performance at 8 GPUs (2.33 ms).
-This highlights efficient inter-GPU communication and workload distribution.
-Comet and Megatron-LM degrade notably (Comet: 7.26–19.01 ms; Megatron-LM: 6.59–10.32 ms),
-indicating communication bottlenecks at scale.
-FasterMoE shows modest improvements (14.28–12.37 ms),
-and DeepEP displays a similar pattern to \sysname (9.65–7.12 ms) but with consistently higher runtimes.
-\section{SM Utilization}\label{sec:sm-utilization}
+To quantify GPU efficiency, we measure Streaming Multiprocessor (SM) utilization during the forward pass (Figure~\ref{fig:smu}).
+FlashDMoE achieves 93.17\% average SM utilization,
+over \textbf{9}x higher than FasterMoE (9.67\%), \textbf{6.8}x higher than DeepEP+Megatron-LM (13.55\%)
+\textbf{4}x higher than Megatron-TE (59.11\%), and
+\textbf{2.2}x higher than Comet (42.31\%).
+This improvement stems from our fully fused kernel architecture and
+fine-grained pipelining of compute and communication tasks.
+By eliminating idle gaps due to kernel launches and enabling in-kernel task scheduling,
+FlashDMoE ensures SMs remain busy with productive work throughout execution.
+\section{Overlap Efficiency}\label{sec:overlap-efficiency}
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_gpus_8}
+        \caption{Latency as Number of GPUs increases.}
+        \label{fig:lng}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/overlap_efficiency_8}
+        \caption{Weak scaling efficiency.}
+        \label{fig:oe}
+    \end{subfigure}
+    \caption{Forward Latency as the \emph{Number of Tokens} per GPU increases. We define Overlap Efficiency $O_e$
+        to be $O_e = T(2) / T(N_G)$, where $T(N_G)$ is the latency at $N_G$ GPUs and $T(2)$ is the latency at 2 GPUs.}
+    \label{fig:oet}
+\end{figure}
+We evaluate the extent to which \sysname overlaps communication and computation by measuring weak scaling efficiency
+as the number of GPUs increases (Figure~\ref{fig:oe}).
+We note that most baselines fail to execute at a single GPU, hence why we use 2 GPUs as the reference point.
+We observe that Megatron-CUTLASS and Megatron-TE degrade significantly,
+with overlap efficiency dropping below 0.5 at $\geq 4$ GPUs. \sysname gives up to \textbf{3.88}x and
+\textbf{4}x higher efficiency at 4 and 8 GPUs, respectively.
+Figure~\ref{fig:lng} further illuminates this efficiency, as \sysname shows stable forward latency growth,
+whereas baselines Megatron-CUTLASS and Megatron-TE experience approximately linear
+latency amplification while FasterMoE exhibits sublinear scaling.
+We attribute this suboptimal performance to straggler effects and exposed communication.
+In contrast, \sysname demonstrates uniform latency as expected since the workload per
+GPU is fixed in this weak scaling experiment.
+These results further corroborate that \sysname's actor-based design and asynchronous data movement
+achieve near-ideal overlap, even at scale.
+\section{Throughput}\label{sec:throughput}
 \begin{figure}[!ht]
     \centering
-    \subcaptionbox{Comparison of SM utilization, defined as the ratio of cycles in which SMs have at least one warp in flight to the total number of cycles~\cite{nsight-metrics}. Values represent the average SM utilization over 100 iterations. All experiments use T = 8K and E = 64 on two GPUs.\label{fig:sm-util}}{%
-        \includegraphics[width=0.7\linewidth]{figures/sm_util}
-    }
-    \hspace{2pt}
-    \subcaptionbox{Payload efficiency. The y-axis shows the total number of bits transferred over NVLink with the same configuration. The x-axis shows the total layer execution time over 100 iterations. Both axes are log-scaled.
-    % \byungsoo{Need to make sense of this result: why larger payload size for FasterMoE despite uniform configuration?}
-    \label{fig:payload-efficiency}}{%
-        \includegraphics[width=0.7\linewidth]{figures/payload_efficiency}
-    }
-    \caption{Factors leading to performance improvement of \sysname.}
-    \label{fig:sm-util-payload-efficiency}
+    \centering
+    \includegraphics[width=0.7\linewidth, keepaspectratio]{figures/throughput_8}
+    \caption{Throughput as the amount of GPUs increases. We compute throughput as $\frac{T * N_G}{latency}$, where
+        $N_G$ is the number of GPUs.}
+    \label{fig:thr}
 \end{figure}
-Figure~\ref{fig:sm-util} shows GPU utilization,
-measured by the average SM utilization (fraction of GPU cycles with active warps~\cite{nsight-metrics}).
-\sysname achieves over 90\% SM utilization, showing effective fine-grained task scheduling and reduced idle GPU time.
-\section{Payload Efficiency}\label{sec:payload-efficiency}
-We next evaluate payload efficiency (Figure~\ref{fig:payload-efficiency})
-by measuring the volume of data transferred over NVLink.
-Traditional MoE frameworks communicate zero-padded tokens,
-inflating network payloads.
-In contrast, \sysname's in-place padding approach transmits only active tokens,
-reducing communication volume substantially and resulting in better runtime performance.
+Throughput, measured in tokens per second (MTokens/s), reflects end-to-end system efficiency.
+As shown in Figure~\ref{fig:thr}, \sysname
+scales linearly with GPU count,
+reaching 17.7 MTokens/s at 8 GPUs.
+This is over \textbf{5.7}x higher than FasterMoE and \textbf{4.9}x higher than Megatron-TE and Megatron-CUTLASS\@.
+Notably, these results are achieved despite \emph{FlashDMoE operating entirely in FP32,
+    while baselines use FP16}.
+This indicates that FlashDMoE’s design eliminates throughput bottlenecks not by
+exploiting lower precision, but by maximizing hardware utilization and eliminating host-driven inefficiencies.
+\section{Expert Scalability}\label{sec:expert-scalability}
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_experts}
+        \caption{4 H100s}
+        \label{sub:4gx}
+    \end{subfigure}
+    \begin{subfigure}{0.49\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_experts_8}
+        \caption{8 H100s}
+        \label{sub:8gx}
+    \end{subfigure}
+    \caption{Forward Latency as the \emph{Number of experts} increases.}
+    \label{fig:xs}
+\end{figure}
+We analyze how \sysname scales with increasing number of experts at fixed sequence length (T = 16K).
+Note that for the discussed plots, the number of experts on the x-axis is the \emph{total number across all GPUs}.
+Each GPU gets 1/8th of this value.
+As seen in Figure\ref{fig:xs}, \sysname maintains \emph{low, uniform} latency, as desired,
+even as the number of experts grows from 8 to 128.
+In contrast, baselines exhibit superlinear latency increases due to increased kernel launch overheads.
+\sysname outperforms these baselines by up to \textbf{4}X at 4 H100s and \textbf{6.6}X at 8 H100s, both at 128 experts.
+\sysname’s payload-efficient communication and scheduler-driven
+in-kernel dispatching allow it to sustain expert parallelism
+without incurring the communication and orchestration penalties seen in other systems.
+These results reinforce FlashDMoE’s scalability for ultra-sparse MoE configurations.
 \section{Multi-Node Evaluation}\label{sec:multi-node-evaluation}
+In this experiment, we seek to evaluate \sysname in the multi-node setting, where GPU interconnects
+span both InfiniBand (internode) and NVLink connections (intranode).
 \subsection{Setup}\label{subsec:setup}
-In this experiment, we seek to evaluate \sysname in the multi-node setting.
 We use 4 nodes, where each node comprises 4 A100 GPUs fully interconnected via NVLink.
 Across nodes, each GPU uses a single NIC providing 25 GB/s of bandwidth.
 We set the number of experts to be $16$ and assign each GPU to host only one,
@@ -144,13 +215,12 @@ this exploration as an exercise orthogonal to this work.
 \section{Memory Overhead}\label{sec:eval:memory}
 We measure the GPU memory required for the symmetric tensor $L$ and runtime bookkeeping state of \sysname.
 Memory overhead depends primarily on the tile size, expert capacity (EC), and the number of experts ($E$).
-Table~\ref{tab:memory-overhead} summarizes memory overhead under various configurations,
-confirming that \sysname maintains a modest and predictable memory footprint.
+Table~\ref{tab:memory-overhead} summarizes memory overhead under various configurations, confirming that \sysname maintains a modest and predictable memory footprint.
 \begin{table}[!ht]
     \centering
-    \caption{Memory overhead (tile size $bM = 128$, $Size(T) = \text{Tokens} * 4KB$).}
+    \caption{Memory overhead with (tile size $bM = 128$), $Size(T) = \text{Tokens} * 4KB$).}
     \label{tab:memory-overhead}
-    \setlength{\tabcolsep}{2pt}
+    \setlength{\tabcolsep}{4pt}
     \renewcommand{\arraystretch}{0.9}
     \begin{tabular}{ccccccc}
         \toprule
@@ -174,57 +244,3 @@ confirming that \sysname maintains a modest and predictable memory footprint.
     \end{tabular}
 \end{table}
 \clearpage
-\section{Numerical Data}\label{sec:numerical-data}
-\begin{table}[!ht]
-    \centering
-    \caption{Latency (ms) comparison across different numbers of tokens (Figure~\ref{fig:scalability-token}).}
-    \label{tab:latency-tokens}
-    \setlength{\tabcolsep}{5pt}
-    \renewcommand{\arraystretch}{0.9}
-    \begin{tabular}{cccccc}
-        \toprule
-        \textbf{Tokens} & \textbf{FlashDMoE} & \textbf{Comet} & \textbf{FasterMoE} & \textbf{Megatron} & \textbf{DeepEP} \\
-        \midrule
-        1024  & 2.07 & 2.87 & 3.85 & 2.59 & 3.80 \\
-        2048  & 1.90 & 5.12 & 5.04 & 3.83 & 3.83 \\
-        4096  & 2.19 & 9.54 & 7.44 & 5.83 & 4.62 \\
-        8192  & 2.33 & 19.01 & 12.37 & 10.32 & 7.12 \\
-        \bottomrule
-    \end{tabular}
-    \vspace{-0.4cm}
-\end{table}
-\begin{table}[!ht]
-    \centering
-    \caption{Latency (ms) comparison across different numbers of experts (Figure~\ref{fig:scalability-experts}).}
-    \label{tab:latency-experts}
-    \setlength{\tabcolsep}{5pt}
-    \renewcommand{\arraystretch}{0.9}
-    \begin{tabular}{cccccc}
-        \toprule
-        \textbf{Experts} & \textbf{FlashDMoE} & \textbf{Comet} & \textbf{FasterMoE} & \textbf{Megatron} & \textbf{DeepEP} \\
-        \midrule
-        16  & 1.20 & 19.01 & 11.38 & 10.47 & 5.59 \\
-        32  & 2.33 & 19.01 & 12.37 & 10.32 & 7.12 \\
-        64  & 4.20 & 19.21 & 16.64 & 10.47 & 7.49 \\
-        128 & 8.20 & 19.36 & 22.65 & 10.47 & 11.30 \\
-        \bottomrule
-    \end{tabular}
-    \vspace{-0.4cm}
-\end{table}
-\begin{table}[!ht]
-    \centering
-    \caption{Latency (ms) comparison across different numbers of GPUs (Figure~\ref{fig:scalability-gpus}).}
-    \label{tab:latency-gpus}
-    \setlength{\tabcolsep}{5pt}
-    \renewcommand{\arraystretch}{0.9}
-    \begin{tabular}{cccccc}
-        \toprule
-        \textbf{GPUs} & \textbf{FlashDMoE} & \textbf{Comet} & \textbf{FasterMoE} & \textbf{Megatron} & \textbf{DeepEP} \\
-        \midrule
-        2 & 6.00 & 7.26 & 14.28 & 6.59 & 9.65 \\
-        4 & 1.98 & 10.98 & 13.59 & 7.82 & 6.72 \\
-        8 & 2.33 & 19.01 & 12.37 & 10.32 & 7.12 \\
-        \bottomrule
-    \end{tabular}
-    \vspace{-0.4cm}
-\end{table}

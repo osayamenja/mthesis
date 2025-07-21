@@ -26,6 +26,8 @@
     lockless execution across tens of thousands of GPU threads and across distributed GPUs as well.
     We demonstrate how \sysname addresses the all-to-all communication bottleneck in expert parallelism
     and enables high-throughput, GPU-initiated communication.
-    Evaluated against state-of-the-art distributed MoE frameworks, \sysname achieves up to \textbf{15$\times$} speedup,
-    establishing a new, scalable design methodology for distributed GPU systems.
+    Evaluated against state-of-the-art distributed MoE frameworks,
+    \sysname achieves up to \textbf{9}$\times$ higher GPU utilization, \textbf{6}$\times$ lower latency,
+    \textbf{5.7}$\times$ higher throughput, and \textbf{4}$\times$ better overlap efficiency
+    compared to state-of-the-art baselines—despite using FP32 while baselines use FP16.
 \end{abstract}

@@ -77,11 +77,25 @@ between the MoE and dense transformer models!
 \begin{equation}\label{eq:equivalence}
 \mathcal{F}_{MoE} = 4SHP = \mathcal{F}_{FFN}
 \end{equation}
-This relationship presents empirically as uniform latency when $N_e$
-increases but only till a certain threshold.
-Exceeding this limit causes the latency to increase proportionally;
-existing work gives no explanation for this phenomenon, but we
-hypothesize GPU L1/L2 cache thrashing to be the culprit.
+This relationship presents empirically as uniform latency independent of changes in $N_e$ ($8 \rightarrow 128$),
+as \sysname, and Megatron-\{CUTLASS, TE\} exhibit in Figure~\ref{fig:expert_trend}.
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}{0.485\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_experts}
+        \caption{$4$ H100s}
+        \label{sub:4_expert_trend}
+    \end{subfigure}
+    \begin{subfigure}{0.485\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, keepaspectratio]{figures/scaling_experts_8}
+        \caption{$8$ H100s}
+        \label{sub:8_expert_trend}
+    \end{subfigure}
+    \caption{Correlative trend between forward runtime and number of experts across different MoE operators.}
+    \label{fig:expert_trend}
+\end{figure}
 
 \section{Communication Overheads in Distributed MoE}\label{sec:communication-overheads-in-distributed-moe}
 \begin{figure}[!ht]
@@ -95,14 +109,17 @@ hypothesize GPU L1/L2 cache thrashing to be the culprit.
 \end{figure}
 As MoE model sizes grow, GPU memory constraints prevent hosting all experts on a single device.
 The standard practice is to distribute experts across multiple GPUs using expert parallelism (EP),
-which requires the gate function to route tokens via \alltoall communication
-~\cite{deepep, arctic, dbrx, 10.1145/3577193.3593704}.
-Overall, each MoE layer executes two \alltoall operations during inference,
-introducing significant communication overhead. \alltoall communication is challenging to optimize on GPU networks
-and is highly sensitive to straggler delays---a phenomenon where a single \emph{straggler} GPU delays
-all others from making progress.
-In practice, these communication operations can account for up to 40\% of the total runtime during inference or
-training~\cite{10.1145/3603269.3604869, MLSYS2024_339caf45}.
+which requires token routing via many-to-many communication in \alltoall or
+\allgather~\cite{deepep, arctic, dbrx, 10.1145/3577193.3593704}.
+Another round of said many-to-many communication is also necessary for restoring the permuted tokens processed by experts
+to their original order within the sequence.
+Existing work has observed these communication operations
+taking 68\% of total runtime~\cite{10.1145/3603269.3604869, MLSYS2024_339caf45},
+during which the GPU is completely idle, unless the implementation explicitly overlaps with computation.
+This form of pipelining is challenging to achieve efficiently because it requires
+\emph{asynchronous GPU-driven communication} and \emph{kernel fusion} to maximize the overlap efficiency.
+Typically, inter-GPU communication APIs available in frameworks like PyTorch are not of this kind but instead are
+\emph{CPU-driven}~\cite{nccl}.
 \section{Kernel Launch Overheads in Distributed MoE}\label{sec:kernel-launch-overheads-in-distributed-moe}
 \begin{table}[!ht]
     \centering
@@ -128,35 +145,60 @@ training~\cite{10.1145/3603269.3604869, MLSYS2024_339caf45}.
 To mitigate these communication bottlenecks,
 recent work pipelines computation with communication tasks
 (Figure~\ref{fig:intro}, middle left).
-However, the effectiveness of these solutions is limited by the overhead of
+However, The efficacy of communication overlap is further limited by the overhead of
 launching many kernels from the CPU\@.
-Specifically, MoE layers interleave multiple computation kernels
-(such as gate and expert computations) and communication operations,
-forcing the CPU to launch many GPU kernels per forward pass
-(see Table~\ref{tab:gpuOps}).
+Specifically, existing implementations~\cite{pmlr-v162-rajbhandari22a, comet, megatron, fastermoe}
+require launching a large number of kernels per a single layer pass (see Table~\ref{tab:gpuOps}).
 Frequent kernel launches negatively affect performance by:
 (1) creating non-deterministic kernel start times across GPUs, exacerbating straggler issues;
-(2) introducing unnecessary synchronization points,
-causing GPUs to wait on peers or the CPU before proceeding;
+(2) introducing unnecessary synchronization points, causing GPUs to wait on peers or the CPU before proceeding;
 and (3) incurring repeated global memory round trips at kernel boundaries.
-Although CUDA graphs~\cite{cuda_graphs_nvidia_blog} can partially mitigate the
-first issue in static workloads,
-they are incompatible with MoE's dynamic expert routing patterns.
+Although CUDA graphs~\cite{cuda_graphs_nvidia_blog} can partially mitigate the first issue in static workloads,
+they are incompatible with MoE's dynamically shaped tensors.
 Addressing the remaining issues requires novel solutions,
-which we provide in this work through complete kernel fusion and
-asynchronous device-initiated communication.
-\section{This work's Contributions: DMoE in a single kernel}\label{sec:contributions:-moe-operator-in-a-single-kernel}
-To overcome these fundamental inefficiencies in state-of-the-art MoE models,
-we develop \sysname, a novel MoE architecture that integrates all computation
-and communication tasks into a single persistent GPU kernel, namely
-a kernel that remains active for the entirety of the MoE operator
-(Figure~\ref{fig:intro} bottom left).
-Instead of multiple kernel launches coordinated by the CPU,
-\sysname requires launching only one kernel,
-significantly reducing the involvement of the CPU in the MoE operator.
-Within the fused kernel, \sysname implements a concurrent-programming
-model to achieve fine-grained parallelization
-of computation and communication tasks of the MoE operator.
+which we provide in this work through complete kernel fusion and asynchronous device-initiated communication.
+\section{This work's Contributions: Fast DMoE in a single kernel}\label{sec:contributions:-moe-operator-in-a-single-kernel}
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/sm_util}
+        \caption{GPU SM Utilization}
+        \label{sub:util}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_tokens_8}
+        \caption{Scaling Tokens}
+        \label{sub:tok}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_gpus_8}
+        \caption{Weak Scaling across GPUs}
+        \label{sub:weak_scaling}
+    \end{subfigure}
+    \begin{subfigure}{0.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth, keepaspectratio]{figures/scaling_experts_8}
+        \caption{Expert Scalability}
+        \label{sub:experts}
+    \end{subfigure}
+    \caption{\emph{FlashDMoE} demonstrating
+        (a) improved SM Utilization
+        (b) lower latency for longer token sequences
+        (c) approximately ideal weak scaling and
+        (c) ideal expert scalability.
+    }
+    \label{fig:perf_contributions}
+\end{figure}
+To overcome these fundamental inefficiencies in state-of-the-art MoE models, we develop \sysname, where we
+integrate all DMoE computation and communication tasks into a single persistent GPU kernel,
+namely a kernel that remains active for the entirety of the MoE operator (Figure~\ref{fig:intro} bottom left).
+Instead of multiple kernel launches coordinated by the CPU, \sysname requires launching only one kernel,
+significantly reducing the involvement of the CPU\@.
+Within the fused kernel, \sysname implements a reactive programming model to achieve
+fine-grained parallelism and loosely coupled, non-blocking execution among tens of thousands of GPU threads.
 This design enables \sysname to efficiently utilize GPU resources by reducing idle time.
 \subsection{Warp Specialization and Tile Parallelism.}\label{subsec:wstp}
 \begin{figure}[!ht]
@@ -171,19 +213,19 @@ This design enables \sysname to efficiently utilize GPU resources by reducing id
     \label{fig:flash_actors}
 \end{figure}
 \sysname implements \emph{tile-level parallelism},
-meaning it partitions input token matrices into smaller,
-independent units called \emph{tiles},
-which are processed concurrently by GPU thread warps.
-These warps specialize as \emph{processors}
-since they process input to compute the gate function and expert FFNs.
-A handful of warps perform specialized administrative tasks of
-(1) scheduling computational tasks by mapping them to warps (\emph{scheduler}), and
-(2) communicating with other GPUs (\emph{subscriber}).
-This design allows \sysname to dynamically assign tasks to GPU warps based
-on warp availability and the current workload,
-ensuring that no warp remains idle while useful work can be done.
-\sysname selects tile dimensions to maximize GPU arithmetic intensity and
-minimize register pressure.
+meaning it partitions input token matrices into statically sized, \emph{independent}
+tensors, called \emph{tiles},
+which are processed concurrently by a set of GPU thread warps comprising a
+\textbf{C}ooperative \textbf{T}hread \textbf{A}rray (CTA) or thread block.
+We specialize every thread block, except one, as \emph{processors} to perform computation and
+remote data transfers.
+In addition, we designate a dedicated Operating System (OS) block (4 warps) to perform administrative tasks of
+(1) scheduling computational work to processors (\emph{scheduler}),
+and (2) decoding computational tasks from messages received from other GPUs (\emph{subscriber}).
+This design allows \sysname to dynamically assign tasks to GPU blocks based on \emph{readiness},
+ensuring that no GPU SM remains idle throughout the lifetime of the DMoE operator.
+\sysname selects tile dimensions to maximize GPU arithmetic intensity
+while still benefitting from a high-degree of parallelism.
 \subsection{Asynchronous and payload-efficient communication.}\label{subsec:asynchronous-and-payload-efficient-communication.}
 \begin{figure}[!ht]
     \centering
@@ -195,29 +237,31 @@ minimize register pressure.
     \label{fig:pgas}
 \end{figure}
 By redesigning the MoE operator from the ground up,
-\sysname resolves fundamental inefficiencies inherent
-in the conventional MoE execution pipeline.
-One inefficiency is due to workload imbalance across GPUs due to
-skewed popularity of experts.
-Existing implementations~\cite{pmlr-v162-rajbhandari22a} indiscriminately perform \alltoall communications,
-transferring null values to GPUs that host unpopular experts,
-resulting in wasted communication bandwidth and unnecessary computations on null matrices.
-\sysname introduces \emph{payload-efficient} communication
-by sending tokens only to GPUs with actively selected experts,
-thereby conserving both communication and computational resources.
+\sysname resolves fundamental inefficiencies inherent in the conventional MoE execution pipeline.
+One notable inefficiency is token padding during communication.
+To simplify programming complexity and due to symmetry constraints of collective communication APIs,
+existing implementations have to zero-pad token payloads to match predefined buffer sizes.
+This occurs when tokens are asymmetrically routed to experts, resulting in GPUs receiving much less than the expected
+capacity.
+However, these null payloads waste communication bandwidth, bloat data transfer latency and may lead to
+unnecessary computations on null matrices in some implementations.
+\sysname introduces \emph{payload-efficient} communication by sending non-padded tokens only to
+GPUs with actively selected experts, conserving both communication and computational resources.
 \subsection{Technical Challenges}\label{subsec:technical-challenges}
-Realizing the single-kernel design of \sysname required solving several
-technical challenges.
-\sysname's design is a radical departure from
-traditional synchronous \alltoall collectives,
-where GPUs remain idle until the slowest GPU completes its communication.
-Instead, \sysname establishes a global address space via NVSHMEM~\cite{nvshm} across all GPUs to
-achieve asynchronous communication between GPUs while allowing them to
-continue performing useful computation tasks.
-To implement device-initiated computation primitives,
-\sysname develops custom high-performance GEMM operations for the MoE operator in
-CUTLASS~\cite{Thakkar_CUTLASS_2023}.
+Realizing the single-kernel design of \sysname required
+solving several technical challenges to achieve high performance:
+(1) lightweight computational dependency management; (2)
+navigating optimal SM occupancy configurations; (3) implementing in-device BLAS operations;
+(4) minimizing inter- and intra-device synchronization overheads; (5) implementing transfer-awareness by leveraging
+DMA over Unified Virtual Addressing (UVA) when available.
+In addressing these challenges, \sysname's design presents a
+radical departure from traditional synchronous \alltoall collectives,
+where GPUs exhibit significant idle time during layer execution.
+For device-initiated communication,
+\sysname uses NVSHMEM~\cite{nvshm} to establish a global address space across all GPUs to
+achieve the aforementioned Direct Memory Access (DMA) or Remote DMA (RDMA) communication.
+For in-device BLAS, \sysname develops custom high-performance GEMM operations via CUTLASS~\cite{Thakkar_CUTLASS_2023}.
 \subsection{Research Papers}\label{subsec:research-papers}
-This thesis comprises a first-author publication~\cite{10.1145/3725536.3725539} at ACM SIGMETRICS'24 and another first-author
-submission in review at NeurIPS \('25\).
+This thesis comprises a first-author publication at ACM SIGMETRICS'24~\cite{10.1145/3725536.3725539}
+and another first-author submission in review at NeurIPS \('25\)~\cite{flasharxiv}.
 

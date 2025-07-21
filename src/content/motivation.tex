@@ -54,11 +54,12 @@ and without complete kernel fusion.
     \end{subfigure}
     \caption{Straggler effect of synchronous \alltoall. $M\times N$ A100 or V100 denotes
         $N$ GPUs within a node across $M$ nodes.
-        Every GPU communicates with every other GPU per~\alltoall step.
-        We capture the distribution of delay induced by stragglers across many steps.
-        \textbf{Actual Time} $t_a$ denotes the fastest kernel execution time across all GPUs,
-        conversely \textbf{Total Time} $t$ is the maximum recorded step time, while
-        $Delay$ is the maximum difference between $t$ and $t_a$.}
+        Every GPU communicates with every other GPU per step.
+        \textbf{Actual Time} $t_a$ is the fastest kernel execution time across all GPUs,
+        and \textbf{Total Time} $t$ is the maximum recorded step time.
+        $Delay$ is the maximum difference between $t$ and $t_a$ and
+        is \emph{idle time}. For the 1x8 V100, we
+        profile 1750 steps and 600 steps for the 8x4 A100.}
     \label{fig:straggler}
 \end{figure}
 \begin{figure}[!ht]
@@ -68,19 +69,20 @@ and without complete kernel fusion.
         is repurposed for computation. \sysname implements the overlapped schedule.}
     \label{fig:overlap}
 \end{figure}
-\alltoall communication as currently used in MoE frameworks is a ~\emph{synchronous} collective operation among
-all participating GPUs. In this setting, disparities in processing speeds or kernel scheduling
-among workers induce a straggler effect detrimental to the collective operation's performance.
-Specifically, as shown in Figure~\ref{fig:straggler}, for distributed training of a 1.3B MoE model across 32 A100 GPUs,
-we see P95 communication performance degradation of \textbf{1.32X} when compared to the mean actual kernel time
+\alltoall or \allgather communication as currently used in MoE frameworks
+is a synchronous collective operation, whose completion requires the participation of all involved GPUs.
+Here, disparities in processing speeds or kernel scheduling
+among GPUs induce a straggler effect detrimental (Figure~\ref{fig:overlap}) to (1) the collective operation's performance and (2)
+E2E performance, as stalled GPUs cannot proceed to downstream dependent or independent tasks until the collective terminates.
+Specifically, as shown in Figure~\ref{fig:straggler}, for distributed training of a 1.3B GPT-3 MoE model across
+32 A100 GPUs, we see P95 communication performance degradation of \textbf{1.32X} when compared to the mean actual kernel time
 from Figure~\ref{sub:raw_perl}.
-This performance reduction is rather tame as the underlying hardware is a supercomputer that is
-well-tuned against ``software jitter''~\cite{nerscNetworkNERSC}.
-On the other hand, the performance loss is more severe in a single node commodity Virtual Machine (VM) of
-8 V100 GPUs with higher bandwidth, where we observe p95 performance reduction of \textbf{11X}.
-In line with prior work~\cite{1639320, 10.1145/3545008.3545056} from the HPC community,
+This performance reduction is rather tame as the underlying hardware is a supercomputer well-tuned
+against ``software jitter''~\cite{nerscNetworkNERSC}.
+However, we observe a more severe p95 performance loss of \textbf{11X} in a single-node Virtual Machine (VM).
+In line with prior HPC works~\cite{1639320, 10.1145/3545008.3545056},
 we argue that obviating the inherent barrier in this synchronous collective communication would
-allow GPUs to repurpose this observed idle time for useful computation.
+allow GPUs to repurpose this observed idle time for downstream computation as depicted in Figure~\ref{fig:overlap}.
 \section{Kernel Launch Overheads}\label{sec:kernel-launch-overheads}
 \begin{figure}[!ht]
     \centering
@@ -89,12 +91,11 @@ allow GPUs to repurpose this observed idle time for useful computation.
     Compared to DeepEP that launches 432 kernels, \sysname launches a single one.}
     \label{fig:kl}
 \end{figure}
-We compare the kernel launch overheads between \sysname and existing baselines.
-Table~\ref{tab:gpuOps} shows the number of kernel launches during a single forward pass: 
+Table~\ref{tab:gpuOps} shows the number of kernel launches during a single forward pass:
 \sysname launches exactly one persistent kernel, 
 while the baselines require up to 550 short-lived kernels.
-Figure~\ref{fig:kl} visually compares \sysname and DeepEP~\cite{deepep} using CUDA API
+Figure~\ref{fig:kl} visually compares \sysname and SOTA baseline DeepEP~\cite{deepep} using CUDA API
 traces captured by NSight Systems.
 DeepEP exhibits numerous small CUDA API calls, while \sysname maintains high GPU
 utilization by avoiding launch overhead and
-synchronization gaps—achieving 93.17\% GPU utilization (\S\ref{ch:evaluation}) compared to 20.61\% for DeepEP.
+synchronization gaps—achieving 93.17\% GPU utilization (\S\ref{ch:evaluation}) compared to 14\% for DeepEP.
